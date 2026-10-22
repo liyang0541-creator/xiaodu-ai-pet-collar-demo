@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>小度AI宠物项圈 · 高保真原型</title>
+<style>
+/* ========== app-design-base-1-0 Tokens (inlined, verbatim) ========== */
+:root{
+  --color-brand-primary:#3C77FC; --color-brand-red:#E3383D;
+  --color-brand-gradient-start:#56A0FF; --color-brand-primary-soft:#6392FD;
+  --color-brand-blue-100:#F0F4FF; --color-brand-blue-200:#DAE5FE; --color-brand-blue-500:#6B98FD;
+  --color-brand-red-100:#FDEFF0; --color-brand-red-200:#FAD9DA;
+  --color-text-primary:#191D25; --color-text-secondary:#73757A; --color-text-tertiary:#A0A2A5;
+  --color-text-disabled:#C8C9CC; --color-text-inverse:#FFFFFF;
+  --color-bg-page:#F4F6F9; --color-bg-surface:#FFFFFF; --color-bg-muted:#F8F8F8;
+  --color-bg-subtle:#F8F8FA; --color-bg-brand-subtle:#F5F9FF;
+  --color-border-default:#E4E4E6; --color-border-subtle:#EAEAEA; --color-border-muted:#EBEDF0;
+  --color-function-error:#F24C42; --color-function-success:#32C76D; --color-function-warning:#FD8A26;
+  --color-function-dark-surface:#252630;
+  --color-extension-purple:#B53FFF; --color-extension-cyan:#19CBF0; --color-extension-orange:#F27939;
+  --gradient-brand-blue:linear-gradient(to right,#56A0FF,#3C77FC);
+  --gradient-brand-rainbow:linear-gradient(105deg,#FFA8D6 0%,#FF4DB5 12%,#AE4AD1 34%,#424EFF 71%,#2F7EFF 88%,#41DCFF 100%);
+  --font-sans:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Helvetica,Segoe UI,Arial,Roboto,"PingFang SC","miui","Hiragino Sans GB","Microsoft Yahei",sans-serif;
+  --fw-regular:400; --fw-medium:500; --fw-semibold:600; --fw-bold:700; --fw-black:900;
+  --radius-sm:2px; --radius-md:4px; --radius-lg:8px; --radius-xl:10px; --radius-2xl:12px;
+  --radius-3xl:16px; --radius-4xl:20px; --radius-5xl:24px; --radius-pill:999px;
+  --shadow-control:0 3px 1px 0 rgba(0,0,0,0.05);
+  --shadow-surface:0 4px 12px 0 rgba(25,29,37,0.05);
+  --shadow-floating:0 18px 50px 0 rgba(25,29,37,0.14);
+  --shadow-card-white:0 4px 20px 0 rgba(2,20,83,0.04);
+  --shadow-popup:0 12px 36px 0 rgba(25,29,37,0.18);
+  --shadow-bottom-bar:0 -8px 28px 0 rgba(25,29,37,0.14);
+  --divider-hairline:0.5px solid #E4E4E6;
+  --duration:0.3s; --easing:cubic-bezier(0.25,0.1,0.25,1);
+}
+/* ========== Reset / Shell ========== */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{font-family:var(--font-sans);background:#e9edf3;color:var(--color-text-primary);
+  display:flex;align-items:center;justify-content:center;min-height:100vh;font-size:15px;line-height:1.5;}
+.phone{position:relative;width:390px;height:844px;background:var(--color-bg-page);
+  border-radius:44px;overflow:hidden;box-shadow:var(--shadow-floating);}
+@media (max-width:430px){body{background:var(--color-bg-page);} .phone{width:100vw;height:100vh;border-radius:0;}}
+.statusbar{height:44px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 22px;font-size:14px;font-weight:var(--fw-semibold);color:var(--color-text-primary);
+  position:relative;z-index:20;}
+.statusbar.on-map{color:#fff;}
+.statusbar .sb-right{display:flex;align-items:center;gap:6px;}
+.statusbar .sb-right svg{width:17px;height:17px;}
+.screens{position:absolute;inset:0;}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;background:var(--color-bg-page);}
+.screen.active{display:flex;}
+.screen.sub{animation:slideIn var(--duration) var(--easing);}
+@keyframes slideIn{from{transform:translateX(100%);}to{transform:translateX(0);}}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.scroll::-webkit-scrollbar{display:none;}
+.pad{padding:12px 15px;}
+.navbar{height:56px;display:flex;align-items:center;justify-content:center;position:relative;
+  background:var(--color-bg-surface);flex-shrink:0;}
+.navbar.plain{background:transparent;}
+.navbar .nb-title{font-size:16px;font-weight:var(--fw-medium);color:var(--color-text-primary);}
+.navbar.plain .nb-title{color:#fff;}
+.navbar .nb-left,.navbar .nb-right{position:absolute;top:0;height:56px;display:flex;align-items:center;gap:14px;}
+.navbar .nb-left{left:15px;} .navbar .nb-right{right:15px;}
+.navbar .nb-left svg,.navbar .nb-right svg{width:22px;height:22px;color:var(--color-text-primary);}
+.navbar.plain .nb-left svg,.navbar.plain .nb-right svg{color:#fff;}
+.icon-btn{display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.icon-btn:active{opacity:0.5;}
+.tabbar{height:56px;display:flex;background:var(--color-bg-surface);
+  box-shadow:var(--shadow-bottom-bar);flex-shrink:0;position:absolute;left:0;right:0;bottom:0;z-index:30;}
+.tabbar .tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;cursor:pointer;color:var(--color-text-tertiary);position:relative;}
+.tabbar .tab svg{width:24px;height:24px;}
+.tabbar .tab span{font-size:11px;}
+.tabbar .tab.on{color:var(--color-brand-primary);}
+.tabbar .tab .tab-badge{position:absolute;top:4px;right:calc(50% - 18px);min-width:16px;height:16px;
+  background:var(--color-function-error);color:#fff;border-radius:var(--radius-pill);
+  font-size:11px;line-height:16px;text-align:center;padding:0 4px;}
+.card{background:var(--color-bg-surface);border-radius:var(--radius-2xl);padding:15px;
+  box-shadow:var(--shadow-card-white);margin-bottom:12px;}
+.sec-title{font-size:18px;font-weight:var(--fw-semibold);color:var(--color-text-primary);margin:4px 2px 10px;}
+.row{display:flex;align-items:center;} .between{justify-content:space-between;}
+.muted{color:var(--color-text-secondary);} .tertiary{color:var(--color-text-tertiary);}
+.t12{font-size:12px;} .t13{font-size:13px;} .t14{font-size:14px;} .t16{font-size:16px;}
+.t18{font-size:18px;} .t22{font-size:22px;} .num{font-weight:var(--fw-black);}
+.mb6{margin-bottom:6px;} .mb10{margin-bottom:10px;} .mt4{margin-top:4px;} .mt10{margin-top:10px;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:none;cursor:pointer;
+  font-family:inherit;font-weight:var(--fw-medium);border-radius:var(--radius-pill);transition:opacity .2s;}
+.btn:active{opacity:.7;}
+.btn-lg{height:46px;font-size:16px;padding:0 24px;} .btn-nm{height:36px;font-size:15px;padding:0 23px;}
+.btn-sm{height:28px;font-size:12px;padding:0 14px;}
+.btn-primary{background:var(--color-brand-primary);color:#fff;}
+.btn-grad{background:var(--gradient-brand-blue);color:#fff;}
+.btn-danger{background:var(--color-brand-red);color:#fff;}
+.btn-plain{background:var(--color-bg-surface);color:var(--color-text-primary);border:1px solid var(--color-border-default);}
+.btn-soft{background:var(--color-brand-blue-100);color:var(--color-brand-primary);}
+.btn-block{display:flex;width:100%;}
+.btn[disabled]{opacity:.3;pointer-events:none;}
+.cellgroup{background:var(--color-bg-surface);border-radius:var(--radius-2xl);overflow:hidden;margin-bottom:12px;}
+.cell{min-height:56px;display:flex;align-items:center;padding:0 15px;position:relative;cursor:pointer;background:#fff;}
+.cell+.cell::before{content:"";position:absolute;top:0;left:15px;right:0;border-top:var(--divider-hairline);}
+.cell:active{background:var(--color-bg-subtle);}
+.cell .c-icon{width:28px;height:28px;margin-right:12px;color:var(--color-brand-primary);display:flex;align-items:center;}
+.cell .c-icon svg{width:24px;height:24px;}
+.cell .c-main{flex:1;min-width:0;}
+.cell .c-title{font-size:16px;color:var(--color-text-primary);}
+.cell .c-label{font-size:13px;color:var(--color-text-tertiary);margin-top:2px;}
+.cell .c-value{font-size:14px;color:var(--color-text-secondary);margin-left:8px;}
+.cell .c-arrow{width:16px;height:16px;color:var(--color-text-tertiary);margin-left:6px;flex-shrink:0;}
+.tag{display:inline-flex;align-items:center;gap:3px;height:22px;padding:0 8px;border-radius:var(--radius-pill);
+  font-size:12px;background:var(--color-brand-blue-100);color:var(--color-brand-primary);}
+.tag.success{background:#E7F8EF;color:var(--color-function-success);}
+.tag.warn{background:#FFF2E3;color:var(--color-function-warning);}
+.tag.err{background:var(--color-brand-red-100);color:var(--color-function-error);}
+.tag.gray{background:var(--color-bg-muted);color:var(--color-text-secondary);}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;}
+.switch{width:35px;height:21px;border-radius:var(--radius-pill);background:rgba(120,120,128,0.16);
+  position:relative;cursor:pointer;flex-shrink:0;transition:background var(--duration) var(--easing);}
+.switch::after{content:"";position:absolute;top:1px;left:1px;width:19px;height:19px;border-radius:50%;
+  background:#fff;box-shadow:var(--shadow-control);transition:transform var(--duration) cubic-bezier(0.3,1.05,0.4,1.05);}
+.switch.on{background:var(--color-brand-primary);} .switch.on::after{transform:translateX(14px);}
+.field{display:flex;align-items:center;min-height:56px;padding:0 15px;background:#fff;border-radius:var(--radius-2xl);}
+.field .f-label{width:70px;font-size:16px;color:var(--color-text-primary);}
+.field input{flex:1;border:none;outline:none;font-size:16px;font-family:inherit;color:var(--color-text-primary);background:transparent;}
+.field input::placeholder{color:var(--color-text-tertiary);}
+.map{position:relative;background:
+  linear-gradient(0deg,rgba(60,119,252,0.04),rgba(60,119,252,0.04)),
+  repeating-linear-gradient(0deg,#dfe6ee 0 1px,transparent 1px 40px),
+  repeating-linear-gradient(90deg,#dfe6ee 0 1px,transparent 1px 40px),
+  linear-gradient(135deg,#eef3f8,#e3ebf3);overflow:hidden;}
+.map .road{position:absolute;background:#fff;opacity:.9;}
+.map .road.h{height:14px;left:-10%;width:120%;}
+.map .road.v{width:12px;top:-10%;height:120%;}
+.map .road.d{height:10px;width:150%;left:-20%;transform:rotate(26deg);transform-origin:left;}
+.map .park{position:absolute;background:#d9ecd6;border-radius:40% 55% 50% 45%;}
+.pin{position:absolute;transform:translate(-50%,-100%);z-index:5;}
+.pin .pin-body{width:42px;height:42px;border-radius:50%;background:#fff;border:3px solid var(--color-brand-primary);
+  overflow:hidden;box-shadow:var(--shadow-floating);}
+.pin .pin-body img{width:100%;height:100%;object-fit:cover;}
+.pin::after{content:"";position:absolute;left:50%;bottom:-7px;transform:translateX(-50%);
+  border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid var(--color-brand-primary);}
+.accuracy{position:absolute;transform:translate(-50%,-50%);border-radius:50%;
+  background:radial-gradient(rgba(60,119,252,0.18),rgba(60,119,252,0.06));border:1px solid rgba(60,119,252,0.35);z-index:4;}
+.map-fab{position:absolute;right:15px;width:44px;height:44px;border-radius:50%;background:#fff;
+  box-shadow:var(--shadow-floating);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.map-fab svg{width:22px;height:22px;color:var(--color-brand-primary);}
+.map-fab:active{opacity:.7;}
+.track-path{position:absolute;inset:0;z-index:3;pointer-events:none;}
+.sheet{background:var(--color-bg-surface);border-radius:var(--radius-5xl) var(--radius-5xl) 0 0;
+  box-shadow:var(--shadow-bottom-bar);padding:16px 15px 14px;}
+.sheet .grabber{width:36px;height:4px;border-radius:2px;background:#E4E4E6;margin:0 auto 12px;}
+.pet-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.pet-head .avatar{width:48px;height:48px;border-radius:50%;object-fit:cover;border:1px solid var(--color-border-subtle);}
+.pet-head .ph-name{font-size:18px;font-weight:var(--fw-semibold);}
+.statline{display:flex;gap:8px;margin-top:4px;}
+.device-stats{display:flex;background:var(--color-bg-subtle);border-radius:var(--radius-lg);padding:12px 0;margin-bottom:14px;}
+.device-stats .ds{flex:1;text-align:center;position:relative;}
+.device-stats .ds+.ds::before{content:"";position:absolute;left:0;top:15%;height:70%;border-left:var(--divider-hairline);}
+.device-stats .ds .v{font-size:20px;font-weight:var(--fw-black);color:var(--color-text-primary);}
+.device-stats .ds .k{font-size:12px;color:var(--color-text-tertiary);margin-top:2px;}
+.addr{display:flex;align-items:flex-start;gap:6px;font-size:13px;color:var(--color-text-secondary);margin-bottom:14px;}
+.addr svg{width:15px;height:15px;color:var(--color-brand-primary);flex-shrink:0;margin-top:1px;}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px 0;}
+.grid .g-item{display:flex;flex-direction:column;align-items:center;gap:7px;padding:6px 0;cursor:pointer;}
+.grid .g-item:active{opacity:.6;}
+.grid .g-ico{width:46px;height:46px;border-radius:var(--radius-3xl);display:flex;align-items:center;justify-content:center;
+  background:var(--color-brand-blue-100);color:var(--color-brand-primary);}
+.grid .g-ico.red{background:var(--color-brand-red-100);color:var(--color-function-error);}
+.grid .g-ico.green{background:#E7F8EF;color:var(--color-function-success);}
+.grid .g-ico.orange{background:#FFF2E3;color:var(--color-function-warning);}
+.grid .g-ico.purple{background:#F4EBFF;color:var(--color-extension-purple);}
+.grid .g-ico svg{width:24px;height:24px;}
+.grid .g-item span{font-size:12px;color:var(--color-text-primary);}
+.banner{display:flex;align-items:center;gap:8px;margin:0 15px 12px;padding:11px 14px;border-radius:var(--radius-2xl);
+  font-size:13px;background:#FFF2E3;color:#8a5212;}
+.banner.err{background:var(--color-brand-red-100);color:var(--color-function-error);}
+.banner svg{width:18px;height:18px;flex-shrink:0;}
+.banner .b-act{margin-left:auto;font-weight:var(--fw-medium);color:var(--color-brand-primary);white-space:nowrap;}
+.ai-card{background:var(--gradient-brand-blue);color:#fff;border-radius:var(--radius-5xl);padding:18px;
+  box-shadow:0 10px 28px rgba(60,119,252,0.28);margin-bottom:14px;position:relative;overflow:hidden;}
+.ai-card .ai-glow{position:absolute;right:-30px;top:-30px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,0.14);}
+.ai-card .ai-tag{display:inline-flex;align-items:center;gap:4px;font-size:12px;background:rgba(255,255,255,0.22);
+  padding:3px 10px;border-radius:var(--radius-pill);margin-bottom:10px;}
+.ai-card .ai-headline{font-size:22px;font-weight:var(--fw-bold);line-height:1.4;margin-bottom:8px;}
+.ai-card .ai-desc{font-size:14px;opacity:.92;line-height:1.6;}
+.vitals{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.vital{background:var(--color-bg-subtle);border-radius:var(--radius-2xl);padding:14px 8px;text-align:center;}
+.vital .vv{font-size:18px;font-weight:var(--fw-black);}
+.vital .vk{font-size:12px;color:var(--color-text-tertiary);margin-top:2px;}
+.progress-row{margin-top:12px;}
+.progress-row .pr-top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;}
+.bar{height:8px;border-radius:var(--radius-pill);background:var(--color-bg-muted);overflow:hidden;}
+.bar>i{display:block;height:100%;border-radius:var(--radius-pill);background:var(--gradient-brand-blue);}
+.bar.green>i{background:var(--color-function-success);}
+.ev{display:flex;gap:12px;padding:12px 0;position:relative;align-items:center;}
+.ev+.ev::before{content:"";position:absolute;top:0;left:48px;right:0;border-top:var(--divider-hairline);}
+.ev .ev-ic{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.ev .ev-ic svg{width:20px;height:20px;}
+.ev .ev-main{flex:1;}
+.ev .ev-title{font-size:15px;color:var(--color-text-primary);}
+.ev .ev-sub{font-size:13px;color:var(--color-text-tertiary);margin-top:3px;}
+.ev .ev-time{font-size:12px;color:var(--color-text-tertiary);white-space:nowrap;}
+.subtabs{display:flex;gap:22px;padding:0 15px;background:#fff;height:44px;align-items:center;flex-shrink:0;}
+.subtabs .st{position:relative;font-size:15px;color:var(--color-text-secondary);cursor:pointer;height:44px;display:flex;align-items:center;}
+.subtabs .st.on{color:var(--color-text-primary);font-weight:var(--fw-semibold);}
+.subtabs .st.on::after{content:"";position:absolute;bottom:6px;left:0;right:0;height:3px;border-radius:2px;background:var(--color-brand-primary);}
+.mask{position:absolute;inset:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:100;}
+.mask.show{display:flex;}
+.dialog{width:280px;background:#fff;border-radius:var(--radius-2xl);overflow:hidden;box-shadow:var(--shadow-popup);}
+.dialog .d-body{padding:24px 20px 16px;text-align:center;}
+.dialog .d-title{font-size:18px;font-weight:var(--fw-medium);margin-bottom:10px;}
+.dialog .d-msg{font-size:15px;color:var(--color-text-secondary);line-height:1.5;}
+.dialog .d-foot{display:flex;border-top:var(--divider-hairline);height:50px;}
+.dialog .d-foot button{flex:1;border:none;background:#fff;font-family:inherit;font-size:17px;cursor:pointer;}
+.dialog .d-foot button:active{background:var(--color-bg-subtle);}
+.dialog .d-foot .d-cancel{color:var(--color-text-secondary);border-right:var(--divider-hairline);}
+.dialog .d-foot .d-ok{color:var(--color-brand-primary);font-weight:var(--fw-medium);}
+.dialog .d-foot .d-ok.danger{color:var(--color-function-error);}
+.toast{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.8);
+  color:#fff;font-size:15px;padding:12px 18px;border-radius:var(--radius-2xl);z-index:200;opacity:0;
+  transition:opacity .2s;pointer-events:none;max-width:70%;text-align:center;}
+.toast.show{opacity:1;}
+.playbar{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:var(--radius-5xl) var(--radius-5xl) 0 0;
+  box-shadow:var(--shadow-bottom-bar);padding:16px 18px 20px;z-index:10;}
+.playbar .pb-time{display:flex;justify-content:space-between;font-size:12px;color:var(--color-text-tertiary);margin-top:6px;}
+.playbar .pb-ctrl{display:flex;align-items:center;justify-content:center;gap:28px;margin-top:14px;}
+.playbar .pb-play{width:54px;height:54px;border-radius:50%;background:var(--color-brand-primary);color:#fff;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 16px rgba(60,119,252,0.35);}
+.playbar .pb-play svg{width:26px;height:26px;}
+.speed-chip{min-width:46px;height:32px;border-radius:var(--radius-pill);background:var(--color-bg-muted);
+  color:var(--color-text-primary);font-size:13px;font-weight:var(--fw-medium);display:flex;align-items:center;
+  justify-content:center;cursor:pointer;}
+.track-slider{position:relative;height:8px;border-radius:var(--radius-pill);background:var(--color-bg-muted);cursor:pointer;}
+.track-slider>i{position:absolute;left:0;top:0;height:100%;border-radius:var(--radius-pill);background:var(--gradient-brand-blue);}
+.track-slider .knob{position:absolute;top:50%;width:18px;height:18px;border-radius:50%;background:#fff;
+  box-shadow:var(--shadow-control);transform:translate(-50%,-50%);}
+.find-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center;}
+.find-btn{width:200px;height:200px;border-radius:50%;background:var(--gradient-brand-blue);color:#fff;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;
+  box-shadow:0 16px 40px rgba(60,119,252,0.4);border:none;font-family:inherit;position:relative;z-index:2;}
+.find-btn.ringing{background:var(--color-brand-red);box-shadow:0 16px 40px rgba(227,56,61,0.4);animation:pulse 1s infinite;}
+.find-btn svg{width:56px;height:56px;}
+.find-btn .fb-label{font-size:18px;font-weight:var(--fw-medium);}
+@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.04);}}
+.ripple{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:200px;height:200px;border-radius:50%;
+  border:2px solid rgba(227,56,61,0.4);animation:ripple 1.6s infinite;z-index:1;}
+@keyframes ripple{from{width:200px;height:200px;opacity:.7;}to{width:320px;height:320px;opacity:0;}}
+.member{display:flex;align-items:center;gap:12px;}
+.member img{width:44px;height:44px;border-radius:50%;object-fit:cover;}
+.lost-hero{background:var(--color-function-dark-surface);color:#fff;border-radius:var(--radius-5xl);padding:22px;text-align:center;margin-bottom:14px;}
+.lost-hero .lh-title{font-size:22px;font-weight:var(--fw-bold);margin:12px 0 6px;}
+.lost-hero .lh-sub{font-size:14px;opacity:.75;line-height:1.6;}
+.empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--color-text-tertiary);padding:40px;}
+.empty svg{width:72px;height:72px;opacity:.5;}
+.empty .e-text{font-size:14px;}
+</style>
+</head>
+<body>
+<!-- ===== Icon sprite (line icons, Xiaodu style, currentColor) ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<g id="i-home"><path d="M4 11.5 12 4l8 7.5M6 10v9a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g id="i-health"><path d="M20 8.5a4 4 0 0 0-7-2.6A4 4 0 0 0 6 8.5c0 4 6 8 6 8s6-4 6-8Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8.5 11h2l1.2-2.2L13.5 13l1-2h2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g id="i-bell"><path d="M6 10a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M10 19a2 2 0 0 0 4 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></g>
+<g id="i-user"><circle cx="12" cy="8" r="3.4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 20c0-3.6 3.1-5.5 7-5.5s7 1.9 7 5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></g>
+<g id="i-back"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g id="i-chev-r"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g id="i-chev-d"><path d="M5 9l7 7 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g id="i-close"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></g>
+<g id="i-battery"><rect x="2" y="8" width="17" height="10" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><rect x="4" y="10" width="11" height="6" rx="1" fill="currentColor"/><path d="M21 11v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></g>
+<g id="i-wifi"><path d="M4 9a13 13 0 0 1 16 0M7 12.5a8 8 0 0 1 10 0M10 16a3.2 3.2 0 0 1 4 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="19" r="1.3" fill="currentColor"/></g>
+<g id="i-pin"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.6" fill="currentColor"/></g>
+<g id="i-target"><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="2.4" fill="currentColor"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></g>
+<g id="i-fence"><path d="M5 9 9 6l3 2 3-2 4 3v9H5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 6v12M15 7v11" stroke="currentColor" stroke-width="1.6"/></g>
+<g id="i-route"><circle cx="6" cy="6" r="2.4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="18" r="2.4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 6h6a3 3 0 0 1 0 6H10a3 3 0 0 0 0 6h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></g>
+<g id="i-sound"><path d="M4 9v6h4l5 4V5L8 9Z" fill="currentColor"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8 8 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></g>
+<g id="i-phone"><path d="M6 3h3l1.5 5-2 1.5a12 12 0 0 0 6 6l1.5-2 5 1.5V21a2 2 0 0 1-2 2A18 18 0 0 1 4 6 2 2 0 0 1 6 3Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></g>
+<g id="i-share"><circle cx="6" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="6" r="2.6" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="18" r="2.6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8.2 10.8 15.8 7.2M8.2 13.2l7.6 3.6" stroke="currentColor" stroke-width="2"/></g>
+<g id="i-settings"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2.5v3M12 18.5v3M4.2 7l2.6 1.5M17.2 15.5l2.6 1.5M4.2 17l2.6-1.5M17.2 8.5 19.8 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></g>
+<g id="i-warn"><path d="M12 3 22 20H2Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 9v5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1.1" fill="currentColor"/></g>
+<g id="i-check"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 12.5l2.5 2.5 5-5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g id="i-plus"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></g>
+<g id="i-refresh"><path d="M19 11a7 7 0 1 0-1.2 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M19 5v6h-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g id="i-layers"><path d="M12 3 3 8l9 5 9-5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M3 13l9 5 9-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></g>
+<g id="i-play"><path d="M8 5v14l11-7Z" fill="currentColor"/></g>
+<g id="i-pause"><rect x="7" y="5" width="4" height="14" rx="1.5" fill="currentColor"/><rect x="13" y="5" width="4" height="14" rx="1.5" fill="currentColor"/></g>
+<g id="i-ai"><path d="M12 3l1.8 4.7L18.5 9l-4.7 1.8L12 15l-1.8-4.2L5.5 9l4.7-1.3Z" fill="currentColor"/><circle cx="18" cy="17" r="1.4" fill="currentColor"/><circle cx="6" cy="17" r="1" fill="currentColor"/></g>
+<g id="i-activity"><path d="M3 12h4l2.5 6 4-13 2.5 7H21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g id="i-moon"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></g>
+<g id="i-heart"><path d="M20 8.5a4 4 0 0 0-7-2.6A4 4 0 0 0 6 8.5c0 4 6 8.5 6 8.5s6-4.5 6-8.5Z" fill="currentColor"/></g>
+<g id="i-shield"><path d="M12 3 5 6v6c0 4.4 3 7.4 7 9 4-1.6 7-4.6 7-9V6Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 12l2 2 4-4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g id="i-search"><circle cx="11" cy="11" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 16l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></g>
+<g id="i-paw"><circle cx="7" cy="9" r="1.8" fill="currentColor"/><circle cx="12" cy="7" r="1.8" fill="currentColor"/><circle cx="17" cy="9" r="1.8" fill="currentColor"/><path d="M12 11c-3 0-5 2.2-5 4.5C7 18 9 19 12 19s5-1 5-3.5C17 13.2 15 11 12 11Z" fill="currentColor"/></g>
+<g id="i-doc"><rect x="5" y="3" width="14" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></g>
+<g id="i-cam"><rect x="3" y="7" width="13" height="11" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 11l5-3v8l-5-3Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></g>
+<g id="i-power"><path d="M12 3v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M7 6.5a7 7 0 1 0 10 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></g>
+<g id="i-vip"><path d="M4 8l4 3 4-6 4 6 4-3-1.5 10H5.5Z" fill="currentColor"/></g>
+</defs></svg>
+<div class="phone">
+<div class="screens" id="screens">
+
+<!-- ========== 首页 / 地图总览 ========== -->
+<section class="screen active" id="screen-home" data-root="1">
+  <div class="scroll" style="padding-bottom:68px">
+    <div class="map" style="height:360px">
+      <div class="statusbar on-map"><span>9:41</span><span class="sb-right"><svg><use href="#i-wifi"/></svg><svg><use href="#i-battery"/></svg></span></div>
+      <div class="road h" style="top:120px"></div><div class="road v" style="left:90px"></div>
+      <div class="road d" style="top:220px"></div><div class="park" style="width:120px;height:90px;left:210px;top:60px"></div>
+      <div class="accuracy" style="left:52%;top:55%;width:120px;height:120px"></div>
+      <div class="pin" style="left:52%;top:55%"><div class="pin-body"><img src="https://images.unsplash.com/photo-1558788353-f76d92427f16?w=120&q=70" onerror="this.src='https://picsum.photos/seed/dog/120'"></div></div>
+      <div class="map-fab" style="bottom:96px" onclick="toast('已切换卫星图层')"><svg><use href="#i-layers"/></svg></div>
+      <div class="map-fab" style="bottom:44px" onclick="refreshLoc(this)"><svg><use href="#i-target"/></svg></div>
+    </div>
+    <div class="banner" id="lowbatt"><svg><use href="#i-warn"/></svg><span>项圈电量 18%，建议今晚充电</span><span class="b-act" onclick="document.getElementById('lowbatt').style.display='none'">知道了</span></div>
+    <div class="sheet" style="position:relative;margin-top:-24px;box-shadow:none;border-radius:var(--radius-5xl) var(--radius-5xl) 0 0">
+      <div class="grabber"></div>
+      <div class="pet-head">
+        <img class="avatar" src="https://images.unsplash.com/photo-1558788353-f76d92427f16?w=96&q=70" onerror="this.src='https://picsum.photos/seed/dog/96'">
+        <div style="flex:1">
+          <div class="ph-name">可乐 <span class="t13 muted" style="font-weight:400">· 柯基 2岁</span></div>
+          <div class="statline"><span class="tag success"><i class="dot" style="background:var(--color-function-success)"></i>在线</span><span class="tag gray">GPS · 精度8m</span></div>
+        </div>
+        <div class="icon-btn" onclick="go('share')"><svg style="width:22px;height:22px;color:var(--color-text-secondary)"><use href="#i-share"/></svg></div>
+      </div>
+      <div class="device-stats">
+        <div class="ds"><div class="v">18<span class="t13">%</span></div><div class="k">剩余电量</div></div>
+        <div class="ds"><div class="v">6<span class="t13">天</span></div><div class="k">预计续航</div></div>
+        <div class="ds"><div class="v">IPX6</div><div class="k">防水等级</div></div>
+      </div>
+      <div class="addr"><svg><use href="#i-pin"/></svg><span>海淀区西二旗北路·领秀新硅谷小区南门附近（10分钟前更新）</span></div>
+      <div class="grid">
+        <div class="g-item" onclick="go('track')"><div class="g-ico"><svg><use href="#i-target"/></svg></div><span>实时追踪</span></div>
+        <div class="g-item" onclick="go('trail')"><div class="g-ico"><svg><use href="#i-route"/></svg></div><span>轨迹回放</span></div>
+        <div class="g-item" onclick="go('fence')"><div class="g-ico green"><svg><use href="#i-fence"/></svg></div><span>电子围栏</span></div>
+        <div class="g-item" onclick="go('find')"><div class="g-ico orange"><svg><use href="#i-sound"/></svg></div><span>声光寻宠</span></div>
+        <div class="g-item" onclick="go('lost')"><div class="g-ico red"><svg><use href="#i-warn"/></svg></div><span>走失模式</span></div>
+        <div class="g-item" onclick="go('share')"><div class="g-ico"><svg><use href="#i-share"/></svg></div><span>多人共享</span></div>
+        <div class="g-item" onclick="go('health-detail')"><div class="g-ico purple"><svg><use href="#i-ai"/></svg></div><span>AI 日报</span></div>
+        <div class="g-item" onclick="go('camera')"><div class="g-ico"><svg><use href="#i-cam"/></svg></div><span>摄像机联动</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 健康 (AI 总结) ========== -->
+<section class="screen" id="screen-health" data-root="1">
+  <div class="statusbar"><span>9:41</span><span class="sb-right"><svg><use href="#i-wifi"/></svg><svg><use href="#i-battery"/></svg></span></div>
+  <div class="navbar"><span class="nb-title">健康</span><div class="nb-right"><div class="icon-btn" onclick="go('health-detail')"><svg><use href="#i-doc"/></svg></div></div></div>
+  <div class="scroll pad" style="padding-bottom:68px">
+    <div class="ai-card">
+      <div class="ai-glow"></div>
+      <div class="ai-tag"><svg style="width:14px;height:14px"><use href="#i-ai"/></svg>AI 今日健康总结</div>
+      <div class="ai-headline">今天可乐状态不错，<br>但午后活动偏少</div>
+      <div class="ai-desc">共活动 3.2 公里、睡眠 13 小时，心率体温平稳。下午 1–4 点几乎没动，建议傍晚带它多走走。</div>
+    </div>
+    <div class="banner"><svg><use href="#i-warn"/></svg><span>监测到 1 次午后久卧异常，点此查看摄像机回溯</span><span class="b-act" onclick="go('camera')">查看</span></div>
+    <div class="card">
+      <div class="row between"><div class="sec-title" style="margin:0">今日体征</div><span class="t13 tertiary">14:30 更新</span></div>
+      <div class="vitals mt10">
+        <div class="vital"><div class="vv" style="margin-top:8px">3.2<span class="t12">km</span></div><div class="vk" style="margin-top:14px">活动量</div></div>
+        <div class="vital"><div class="vv" style="margin-top:8px;color:var(--color-function-success)">88<span class="t12">bpm</span></div><div class="vk" style="margin-top:14px">心率 · 正常</div></div>
+        <div class="vital"><div class="vv" style="margin-top:8px">38.4<span class="t12">℃</span></div><div class="vk" style="margin-top:14px">体温 · 正常</div></div>
+      </div>
+      <div class="progress-row"><div class="pr-top"><span>活动目标 3.2 / 4.0 km</span><span class="muted">80%</span></div><div class="bar"><i style="width:80%"></i></div></div>
+      <div class="progress-row"><div class="pr-top"><span>睡眠 13.0 / 12 h</span><span class="muted">充足</span></div><div class="bar green"><i style="width:100%"></i></div></div>
+    </div>
+    <div class="card">
+      <div class="sec-title">今日事件</div>
+      <div class="ev"><div class="ev-ic" style="background:#FFF2E3;color:var(--color-function-warning)"><svg><use href="#i-moon"/></svg></div><div class="ev-main"><div class="ev-title">午后久卧 2 小时</div><div class="ev-sub">13:10–15:08 · 活动量低于日常</div></div><span class="ev-time">轻度</span></div>
+      <div class="ev"><div class="ev-ic" style="background:#E7F8EF;color:var(--color-function-success)"><svg><use href="#i-activity"/></svg></div><div class="ev-main"><div class="ev-title">晨间散步 42 分钟</div><div class="ev-sub">07:05–07:47 · 状态活跃</div></div><span class="ev-time">正常</span></div>
+      <div class="ev"><div class="ev-ic" style="background:var(--color-brand-blue-100);color:var(--color-brand-primary)"><svg><use href="#i-heart"/></svg></div><div class="ev-main"><div class="ev-title">心率平稳</div><div class="ev-sub">全天区间 72–104 bpm</div></div><span class="ev-time">正常</span></div>
+    </div>
+    <button class="btn btn-grad btn-lg btn-block" onclick="go('health-detail')">查看完整健康日报</button>
+    <div class="t12 tertiary" style="text-align:center;margin:12px 0 4px">AI 周报 / 月报、多宠对比为增值订阅功能</div>
+  </div>
+</section>
+
+<!-- ========== 消息 / 报警信息 ========== -->
+<section class="screen" id="screen-messages" data-root="1">
+  <div class="statusbar"><span>9:41</span><span class="sb-right"><svg><use href="#i-wifi"/></svg><svg><use href="#i-battery"/></svg></span></div>
+  <div class="navbar"><span class="nb-title">消息</span><div class="nb-right"><div class="icon-btn" onclick="markAllRead()"><span class="t14" style="color:var(--color-brand-primary)">全部已读</span></div></div></div>
+  <div class="subtabs" id="msg-tabs">
+    <div class="st on" onclick="msgFilter(this,'all')">全部</div>
+    <div class="st" onclick="msgFilter(this,'fence')">越界</div>
+    <div class="st" onclick="msgFilter(this,'health')">健康</div>
+    <div class="st" onclick="msgFilter(this,'device')">设备</div>
+  </div>
+  <div class="scroll" style="padding-bottom:68px">
+    <div class="cellgroup" id="msg-list" style="margin:12px 15px;border-radius:var(--radius-2xl)">
+      <div class="cell" data-cat="fence" data-unread="1"><div class="c-icon" style="color:var(--color-function-error)"><svg><use href="#i-fence"/></svg></div><div class="c-main"><div class="c-title">可乐离开了「小区安全区」</div><div class="c-label">08:42 · 已自动开启高频定位</div></div><span class="ev-time" style="color:var(--color-function-error)">越界</span></div>
+      <div class="cell" data-cat="health" data-unread="1"><div class="c-icon" style="color:var(--color-function-warning)"><svg><use href="#i-moon"/></svg></div><div class="c-main"><div class="c-title">午后久卧异常提醒</div><div class="c-label">15:08 · 活动量明显低于日常</div></div><span class="ev-time" style="color:var(--color-function-warning)">健康</span></div>
+      <div class="cell" data-cat="device"><div class="c-icon" style="color:var(--color-function-warning)"><svg><use href="#i-battery"/></svg></div><div class="c-main"><div class="c-title">项圈电量低于 20%</div><div class="c-label">13:20 · 预计可用 6 天</div></div><span class="ev-time tertiary">设备</span></div>
+      <div class="cell" data-cat="device"><div class="c-icon" style="color:var(--color-function-success)"><svg><use href="#i-home"/></svg></div><div class="c-main"><div class="c-title">可乐已到家</div><div class="c-label">08:05 · 进入 WiFi 范围</div></div><span class="ev-time tertiary">设备</span></div>
+      <div class="cell" data-cat="health"><div class="c-icon" style="color:var(--color-function-success)"><svg><use href="#i-heart"/></svg></div><div class="c-main"><div class="c-title">昨日健康日报已生成</div><div class="c-label">昨天 22:00 · 整体状态良好</div></div><span class="ev-time tertiary">健康</span></div>
+    </div>
+    <div class="empty" id="msg-empty" style="display:none"><svg><use href="#i-bell"/></svg><div class="e-text">这个分类下暂时没有消息</div></div>
+  </div>
+</section>
+
+<!-- ========== 我的 / 设备设置 ========== -->
+<section class="screen" id="screen-me" data-root="1">
+  <div class="statusbar"><span>9:41</span><span class="sb-right"><svg><use href="#i-wifi"/></svg><svg><use href="#i-battery"/></svg></span></div>
+  <div class="navbar"><span class="nb-title">我的</span><div class="nb-right"><div class="icon-btn"><svg><use href="#i-settings"/></svg></div></div></div>
+  <div class="scroll pad" style="padding-bottom:68px">
+    <div class="card" style="display:flex;align-items:center;gap:14px">
+      <img src="https://images.unsplash.com/photo-1558788353-f76d92427f16?w=120&q=70" onerror="this.src='https://picsum.photos/seed/dog/120'" style="width:60px;height:60px;border-radius:50%;object-fit:cover">
+      <div style="flex:1"><div class="t18" style="font-weight:600">可乐</div><div class="t13 muted mt4">柯基犬 · 2岁 · 颈围 320mm</div></div>
+      <svg class="c-arrow" style="width:18px;height:18px;color:var(--color-text-tertiary)"><use href="#i-chev-r"/></svg>
+    </div>
+    <div class="t13 tertiary" style="margin:4px 2px 8px">设备</div>
+    <div class="cellgroup">
+      <div class="cell"><div class="c-icon"><svg><use href="#i-power"/></svg></div><div class="c-main"><div class="c-title">设备信息</div></div><span class="c-value">小度项圈 Pro · 在线</span><svg class="c-arrow"><use href="#i-chev-r"/></svg></div>
+      <div class="cell"><div class="c-icon"><svg><use href="#i-battery"/></svg></div><div class="c-main"><div class="c-title">电量与续航</div></div><span class="c-value">18% · 约6天</span><svg class="c-arrow"><use href="#i-chev-r"/></svg></div>
+      <div class="cell" onclick="toast('项圈带为耗材，换带不换机')"><div class="c-icon"><svg><use href="#i-settings"/></svg></div><div class="c-main"><div class="c-title">项圈带 / 佩戴说明</div></div><svg class="c-arrow"><use href="#i-chev-r"/></svg></div>
+    </div>
+    <div class="t13 tertiary" style="margin:4px 2px 8px">本地合规（新规尽责）</div>
+    <div class="cellgroup">
+      <div class="cell" onclick="toast('电子犬牌功能即将上线')"><div class="c-icon" style="color:var(--color-function-success)"><svg><use href="#i-shield"/></svg></div><div class="c-main"><div class="c-title">电子犬牌与养犬登记</div></div><span class="tag gray">待开通</span><svg class="c-arrow"><use href="#i-chev-r"/></svg></div>
+      <div class="cell" onclick="toast('疫苗提醒功能即将上线')"><div class="c-icon" style="color:var(--color-function-success)"><svg><use href="#i-doc"/></svg></div><div class="c-main"><div class="c-title">疫苗与遛狗留痕</div></div><span class="tag gray">待开通</span><svg class="c-arrow"><use href="#i-chev-r"/></svg></div>
+    </div>
+    <div class="t13 tertiary" style="margin:4px 2px 8px">服务</div>
+    <div class="cellgroup">
+      <div class="cell" onclick="go('share')"><div class="c-icon"><svg><use href="#i-share"/></svg></div><div class="c-main"><div class="c-title">多人共享</div></div><span class="c-value">2 位家人</span><svg class="c-arrow"><use href="#i-chev-r"/></svg></div>
+      <div class="cell" onclick="toast('AI 健康增值订阅 ¥128/年')"><div class="c-icon" style="color:var(--color-extension-purple)"><svg><use href="#i-vip"/></svg></div><div class="c-main"><div class="c-title">AI 健康会员</div><div class="c-label">周报/月报·异常解读·多宠对比</div></div><span class="tag" style="background:#F4EBFF;color:var(--color-extension-purple)">¥128/年</span><svg class="c-arrow"><use href="#i-chev-r"/></svg></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 实时追踪 ========== -->
+<section class="screen sub" id="screen-track">
+  <div class="map" style="flex:1">
+    <div class="statusbar on-map"><span>9:41</span><span class="sb-right"><svg><use href="#i-wifi"/></svg><svg><use href="#i-battery"/></svg></span></div>
+    <div class="navbar plain"><span class="nb-title">实时追踪</span><div class="nb-left"><div class="icon-btn" onclick="back()"><svg><use href="#i-back"/></svg></div></div></div>
+    <div class="road h" style="top:300px"></div><div class="road v" style="left:150px"></div><div class="road d" style="top:460px"></div>
+    <div class="park" style="width:160px;height:120px;left:40px;top:180px"></div>
+    <div class="accuracy" style="left:55%;top:52%;width:90px;height:90px"></div>
+    <div class="pin" style="left:55%;top:52%"><div class="pin-body"><img src="https://images.unsplash.com/photo-1558788353-f76d92427f16?w=120&q=70" onerror="this.src='https://picsum.photos/seed/dog/120'"></div></div>
+    <div class="map-fab" style="right:15px;bottom:150px" onclick="refreshLoc(this)"><svg><use href="#i-target"/></svg></div>
+    <div class="playbar" style="padding:16px 18px 24px">
+      <div class="row between mb10"><span class="tag success"><i class="dot" style="background:var(--color-function-success)"></i>跟随中</span><span class="t13 muted">GPS · 精度 8m · 每 5 秒刷新</span></div>
+      <div class="row" style="gap:12px">
+        <button class="btn btn-soft btn-nm" style="flex:1" onclick="toast('已回到可乐位置')">回到宠物</button>
+        <button class="btn btn-primary btn-nm" style="flex:1" onclick="toast('已停止跟随')">停止跟随</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 轨迹 + 轨迹播放 ========== -->
+<section class="screen sub" id="screen-trail">
+  <div class="map" style="flex:1">
+    <div class="statusbar on-map"><span>9:41</span><span class="sb-right"><svg><use href="#i-wifi"/></svg><svg><use href="#i-battery"/></svg></span></div>
+    <div class="navbar plain"><span class="nb-title">轨迹回放</span><div class="nb-left"><div class="icon-btn" onclick="back()"><svg><use href="#i-back"/></svg></div></div>
+      <div class="nb-right"><div class="icon-btn" onclick="toast('选择日期：今天')"><svg><use href="#i-chev-d"/></svg></div></div></div>
+    <div class="road h" style="top:280px"></div><div class="road v" style="left:120px"></div><div class="park" style="width:140px;height:110px;left:200px;top:160px"></div>
+    <svg class="track-path" viewBox="0 0 390 600" preserveAspectRatio="none">
+      <polyline points="70,180 110,230 150,210 200,300 240,360 300,380 330,460" fill="none" stroke="#3C77FC" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.9"/>
+    </svg>
+    <div class="pin" style="left:18%;top:30%"><div class="pin-body" style="width:30px;height:30px;border-width:2px;background:var(--color-function-success)"></div></div>
+    <div class="pin" id="playhead" style="left:85%;top:77%"><div class="pin-body"><img src="https://images.unsplash.com/photo-1558788353-f76d92427f16?w=120&q=70" onerror="this.src='https://picsum.photos/seed/dog/120'"></div></div>
+    <div class="playbar">
+      <div class="row between"><span class="t14" style="font-weight:500">今天 07:00 – 09:41</span><span class="tag gray">全程 3.2km · 支持回看3个月</span></div>
+      <div class="track-slider mt10" id="pb-slider" onclick="seek(event)"><i id="pb-fill" style="width:35%"></i><span class="knob" id="pb-knob" style="left:35%"></span></div>
+      <div class="pb-time"><span>07:00</span><span id="pb-cur">07:56</span><span>09:41</span></div>
+      <div class="pb-ctrl">
+        <div class="speed-chip" id="pb-speed" onclick="cycleSpeed()">1x</div>
+        <div class="pb-play" id="pb-btn" onclick="togglePlay()"><svg><use href="#i-play"/></svg></div>
+        <div class="speed-chip" onclick="toast('已定位到停留点')"><svg style="width:18px;height:18px"><use href="#i-pin"/></svg></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 电子围栏 ========== -->
+<section class="screen sub" id="screen-fence">
+  <div class="statusbar on-map"><span>9:41</span><span class="sb-right"><svg><use href="#i-wifi"/></svg><svg><use href="#i-battery"/></svg></span></div>
+  <div class="navbar plain" style="background:#fff"><span class="nb-title" style="color:var(--color-text-primary)">电子围栏</span>
+    <div class="nb-left"><div class="icon-btn" onclick="back()"><svg style="color:var(--color-text-primary)"><use href="#i-back"/></svg></div></div></div>
+  <div class="scroll">
+    <div class="map" style="height:300px">
+      <div class="road h" style="top:150px"></div><div class="road v" style="left:180px"></div>
+      <div class="accuracy" style="left:50%;top:50%;width:170px;height:170px;border:2px dashed rgba(60,119,252,0.6)"></div>
+      <div class="pin" style="left:50%;top:50%"><div class="pin-body"><img src="https://images.unsplash.com/photo-1558788353-f76d92427f16?w=120&q=70" onerror="this.src='https://picsum.photos/seed/dog/120'"></div></div>
+    </div>
+    <div class="pad">
+      <div class="card">
+        <div class="sec-title">设置安全范围</div>
+        <div class="field" style="padding:0 0 12px;border-bottom:var(--divider-hairline);border-radius:0"><span class="f-label">名称</span><input value="小区安全区"></div>
+        <div class="progress-row" style="margin-top:14px"><div class="pr-top"><span>半径</span><span class="muted"><b id="fence-val" class="num" style="color:var(--color-brand-primary)">150</b> m</span></div>
+          <div class="track-slider" id="fence-slider" style="height:8px" onclick="setFence(event)"><i id="fence-fill" style="width:30%"></i><span class="knob" id="fence-knob" style="left:30%"></span></div>
+          <div class="pb-time"><span>50m</span><span>500m</span></div>
+        </div>
+        <div class="cell" style="padding:14px 0 0;background:transparent"><div class="c-main"><div class="c-title">越界时推送报警</div></div><div class="switch on" onclick="this.classList.toggle('on')"></div></div>
+      </div>
+      <button class="btn btn-primary btn-lg btn-block" onclick="toast('围栏已保存');setTimeout(back,700)">保存围栏</button>
+      <div class="t13 tertiary" style="margin:8px 2px">已有围栏</div>
+      <div class="cellgroup">
+        <div class="cell"><div class="c-icon" style="color:var(--color-function-success)"><svg><use href="#i-fence"/></svg></div><div class="c-main"><div class="c-title">家 · 200m</div><div class="c-label">状态正常</div></div><div class="switch on" onclick="event.stopPropagation();this.classList.toggle('on')"></div></div>
+        <div class="cell"><div class="c-icon" style="color:var(--color-function-error)"><svg><use href="#i-fence"/></svg></div><div class="c-main"><div class="c-title">小区安全区 · 150m</div><div class="c-label" style="color:var(--color-function-error)">报警中 · 08:42 越界</div></div><div class="switch on" onclick="event.stopPropagation();this.classList.toggle('on')"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 声光寻宠 ========== -->
+<section class="screen sub" id="screen-find">
+  <div class="statusbar"><span>9:41</span><span class="sb-right"><svg><use href="#i-wifi"/></svg><svg><use href="#i-battery"/></svg></span></div>
+  <div class="navbar"><span class="nb-title">声光寻宠</span><div class="nb-left"><div class="icon-btn" onclick="back()"><svg><use href="#i-back"/></svg></div></div></div>
+  <div class="find-wrap">
+    <div style="position:relative;display:flex;align-items:center;justify-content:center">
+      <button class="find-btn" id="find-btn" onclick="toggleFind()"><svg><use href="#i-sound"/></svg><span class="fb-label" id="find-label">启动响铃</span></button>
+    </div>
+    <div class="t16" id="find-status" style="margin-top:36px;font-weight:500">点击让项圈持续响铃并闪光</div>
+    <div class="t13 tertiary" style="margin-top:8px;line-height:1.7;max-width:260px">适合宠物在附近但看不见时使用。响铃会持续耗电，找到后请及时停止。</div>
+  </div>
+</section>
+
+<!-- ========== 走失模式 / 远程呼叫 ========== -->
+<section class="screen sub" id="screen-lost">
+  <div class="statusbar"><span>9:41</span><span class="sb-right"><svg><use href="#i-wifi"/></svg><svg><use href="#i-battery"/></svg></span></div>
+  <div class="navbar"><span class="nb-title">走失模式</span><div class="nb-left"><div class="icon-btn" onclick="back()"><svg><use href="#i-back"/></svg></div></div></div>
+  <div class="scroll pad">
+    <div class="lost-hero">
+      <svg style="width:48px;height:48px;color:var(--color-function-warning)"><use href="#i-warn"/></svg>
+      <div class="lh-title">开启走失模式</div>
+      <div class="lh-sub">将切换到最高频定位、开启声光协寻，并生成可分享的寻宠启事。会显著加快项圈耗电。</div>
+    </div>
+    <div class="cellgroup">
+      <div class="cell"><div class="c-icon"><svg><use href="#i-target"/></svg></div><div class="c-main"><div class="c-title">高频定位（每 10 秒）</div></div><div class="switch on"></div></div>
+      <div class="cell"><div class="c-icon" style="color:var(--color-function-warning)"><svg><use href="#i-sound"/></svg></div><div class="c-main"><div class="c-title">远程声光协寻</div></div><div class="switch on"></div></div>
+      <div class="cell"><div class="c-icon" style="color:var(--color-extension-purple)"><svg><use href="#i-share"/></svg></div><div class="c-main"><div class="c-title">生成社区寻宠启事</div></div><div class="switch"></div></div>
+    </div>
+    <button class="btn btn-danger btn-lg btn-block" onclick="confirmDialog('开启走失模式？','项圈将进入最高频定位与声光协寻，耗电会明显加快。','开启',()=>{toast('走失模式已开启');setTimeout(back,800)})">开启走失模式</button>
+    <button class="btn btn-plain btn-lg btn-block mt10" onclick="confirmDialog('远程呼叫可乐？','项圈将播放您的呼唤录音，帮助附近的人安抚它。','呼叫',()=>toast('正在远程呼叫…'))">远程呼叫</button>
+  </div>
+</section>
+
+<!-- ========== 多人共享 ========== -->
+<section class="screen sub" id="screen-share">
+  <div class="statusbar"><span>9:41</span><span class="sb-right"><svg><use href="#i-wifi"/></svg><svg><use href="#i-battery"/></svg></span></div>
+  <div class="navbar"><span class="nb-title">多人共享</span><div class="nb-left"><div class="icon-btn" onclick="back()"><svg><use href="#i-back"/></svg></div></div></div>
+  <div class="scroll pad">
+    <div class="banner" style="background:var(--color-brand-blue-100);color:var(--color-brand-primary)"><svg><use href="#i-shield"/></svg><span>被分享的家人仅可查看位置与历史轨迹，不能控制设备</span></div>
+    <div class="t13 tertiary" style="margin:4px 2px 8px">已共享成员</div>
+    <div class="cellgroup">
+      <div class="cell"><div class="member" style="flex:1"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&q=70" onerror="this.src='https://picsum.photos/seed/mom/96'"><div><div class="c-title">妈妈</div><div class="c-label">可查看位置 · 轨迹</div></div></div><span class="tag gray">只读</span></div>
+      <div class="cell"><div class="member" style="flex:1"><img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=96&q=70" onerror="this.src='https://picsum.photos/seed/bro/96'"><div><div class="c-title">弟弟</div><div class="c-label">可查看位置 · 轨迹</div></div></div><button class="btn btn-sm btn-plain" onclick="confirmDanger('移除弟弟的共享？','移除后对方将无法再查看可乐的位置。','移除',()=>toast('已移除共享'))">移除</button></div>
+    </div>
+    <button class="btn btn-grad btn-lg btn-block" onclick="toast('邀请链接已复制，去发送给家人吧')"><svg style="width:20px;height:20px"><use href="#i-plus"/></svg>邀请家人共享</button>
+  </div>
+</section>
+
+<!-- ========== 健康日报详情 ========== -->
+<section class="screen sub" id="screen-health-detail">
+  <div class="statusbar"><span>9:41</span><span class="sb-right"><svg><use href="#i-wifi"/></svg><svg><use href="#i-battery"/></svg></span></div>
+  <div class="navbar"><span class="nb-title">健康日报</span><div class="nb-left"><div class="icon-btn" onclick="back()"><svg><use href="#i-back"/></svg></div></div></div>
+  <div class="subtabs"><div class="st on">日</div><div class="st" onclick="toast('周报为会员功能')">周</div><div class="st" onclick="toast('月报为会员功能')">月</div></div>
+  <div class="scroll pad">
+    <div class="ai-card" style="border-radius:var(--radius-2xl)"><div class="ai-glow"></div><div class="ai-tag"><svg style="width:14px;height:14px"><use href="#i-ai"/></svg>10月22日 · AI 解读</div><div class="ai-headline" style="font-size:18px">整体健康，注意午后活动不足</div><div class="ai-desc">活动量达标 80%，睡眠充足，心率体温平稳；午后久卧 2 小时略低于同龄柯基均值，可适度增加互动。</div></div>
+    <div class="card"><div class="sec-title">活动量</div><div class="progress-row"><div class="pr-top"><span>步行 3.2km / 目标 4.0km</span><span class="muted">80%</span></div><div class="bar"><i style="width:80%"></i></div></div><div class="progress-row"><div class="pr-top"><span>活跃时长 2.6h</span><span class="muted">正常</span></div><div class="bar green"><i style="width:65%"></i></div></div></div>
+    <div class="card"><div class="sec-title">睡眠</div><div class="progress-row"><div class="pr-top"><span>总睡眠 13.0h</span><span class="muted" style="color:var(--color-function-success)">充足</span></div><div class="bar green"><i style="width:100%"></i></div></div><div class="t13 tertiary mt10">深睡 7.2h · 浅睡 5.8h · 夜间无异常起身</div></div>
+    <div class="card"><div class="sec-title">生命体征</div>
+      <div class="cell" style="padding:12px 0;background:transparent"><div class="c-icon" style="color:var(--color-function-success)"><svg><use href="#i-heart"/></svg></div><div class="c-main"><div class="c-title">心率</div><div class="c-label">区间 72–104 bpm</div></div><span class="tag success">正常</span></div>
+      <div class="cell" style="padding:12px 0;background:transparent"><div class="c-icon"><svg><use href="#i-activity"/></svg></div><div class="c-main"><div class="c-title">呼吸</div><div class="c-label">22 次/分</div></div><span class="tag success">正常</span></div>
+      <div class="cell" style="padding:12px 0;background:transparent"><div class="c-icon" style="color:var(--color-function-warning)"><svg><use href="#i-power"/></svg></div><div class="c-main"><div class="c-title">体温</div><div class="c-label">38.4℃</div></div><span class="tag success">正常</span></div>
+    </div>
+    <button class="btn btn-soft btn-lg btn-block" onclick="toast('就医建议为增值订阅功能')">获取 AI 就医建议</button>
+  </div>
+</section>
+
+<!-- ========== 摄像机联动 ========== -->
+<section class="screen sub" id="screen-camera">
+  <div class="statusbar"><span>9:41</span><span class="sb-right"><svg><use href="#i-wifi"/></svg><svg><use href="#i-battery"/></svg></span></div>
+  <div class="navbar"><span class="nb-title">摄像机回溯</span><div class="nb-left"><div class="icon-btn" onclick="back()"><svg><use href="#i-back"/></svg></div></div></div>
+  <div class="scroll pad">
+    <div class="banner" style="background:var(--color-brand-blue-100);color:var(--color-brand-primary)"><svg><use href="#i-cam"/></svg><span>项圈检测到 13:10 久卧异常，已匹配客厅摄像机画面</span></div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="position:relative;height:200px;background:#000"><img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=600&q=70" onerror="this.src='https://picsum.photos/seed/room/600/400'" style="width:100%;height:100%;object-fit:cover;opacity:.9"><div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center"><svg style="width:26px;height:26px;color:var(--color-brand-primary)"><use href="#i-play"/></svg></div><span class="tag" style="position:absolute;left:12px;top:12px;background:rgba(0,0,0,0.6);color:#fff">13:08 回溯片段</span></div>
+      <div class="pad"><div class="t14">可乐在客厅沙发角落持续趴卧，呼吸平稳无异常挣扎，初步判断为正常午休。</div></div>
+    </div>
+    <button class="btn btn-primary btn-lg btn-block" onclick="back()">我知道了</button>
+  </div>
+</section>
+
+</div><!-- /screens -->
+
+<!-- 底部 Tab 栏 -->
+<nav class="tabbar" id="tabbar">
+  <div class="tab on" data-tab="home" onclick="switchTab('home')"><svg><use href="#i-home"/></svg><span>首页</span></div>
+  <div class="tab" data-tab="health" onclick="switchTab('health')"><svg><use href="#i-health"/></svg><span>健康</span></div>
+  <div class="tab" data-tab="messages" onclick="switchTab('messages')"><svg><use href="#i-bell"/></svg><span>消息</span><span class="tab-badge">2</span></div>
+  <div class="tab" data-tab="me" onclick="switchTab('me')"><svg><use href="#i-user"/></svg><span>我的</span></div>
+</nav>
+
+<!-- Dialog -->
+<div class="mask" id="mask">
+  <div class="dialog">
+    <div class="d-body"><div class="d-title" id="dlg-title">标题</div><div class="d-msg" id="dlg-msg">内容</div></div>
+    <div class="d-foot"><button class="d-cancel" onclick="closeDialog()">取消</button><button class="d-ok" id="dlg-ok">确定</button></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+</div><!-- /phone -->
+
+<script>
+/* ===== 屏幕路由 ===== */
+var stack=[], curTab='home';
+function screenEl(n){return document.getElementById('screen-'+n);}
+function show(n){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});var el=screenEl(n);el.classList.add('active');var sc=el.querySelector('.scroll');if(sc)sc.scrollTop=0;}
+function isRoot(n){var el=screenEl(n);return el&&el.dataset.root==='1';}
+function toggleTabbar(n){document.getElementById('tabbar').style.display=isRoot(n)?'flex':'none';}
+function go(n){stack.push(curScreen());show(n);toggleTabbar(n);}
+function curScreen(){var a=document.querySelector('.screen.active');return a?a.id.replace('screen-',''):'home';}
+function back(){var p=stack.pop()||'home';show(p);toggleTabbar(p);}
+function switchTab(t){curTab=t;stack=[];show(t);toggleTabbar(t);
+  document.querySelectorAll('.tabbar .tab').forEach(function(x){x.classList.toggle('on',x.dataset.tab===t);});}
+/* ===== Toast / Dialog ===== */
+var tmr;function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(tmr);tmr=setTimeout(function(){t.classList.remove('show');},1800);}
+function confirmDialog(title,msg,ok,cb){openDlg(title,msg,ok,false,cb);}
+function confirmDanger(title,msg,ok,cb){openDlg(title,msg,ok,true,cb);}
+function openDlg(title,msg,ok,danger,cb){document.getElementById('dlg-title').textContent=title;document.getElementById('dlg-msg').textContent=msg;var b=document.getElementById('dlg-ok');b.textContent=ok;b.className='d-ok'+(danger?' danger':'');b.onclick=function(){closeDialog();cb&&cb();};document.getElementById('mask').classList.add('show');}
+function closeDialog(){document.getElementById('mask').classList.remove('show');}
+document.getElementById('mask').addEventListener('click',function(e){if(e.target===this)closeDialog();});
+/* ===== 首页定位刷新 ===== */
+function refreshLoc(btn){var s=btn.querySelector('svg');s.style.transition='transform .6s';s.style.transform='rotate(360deg)';setTimeout(function(){s.style.transition='';s.style.transform='';},600);toast('定位已更新 · GPS 精度 8m');}
+/* ===== 消息筛选 ===== */
+function msgFilter(el,cat){document.querySelectorAll('#msg-tabs .st').forEach(function(x){x.classList.remove('on');});el.classList.add('on');var any=false;document.querySelectorAll('#msg-list .cell').forEach(function(c){var ok=(cat==='all'||c.dataset.cat===cat);c.style.display=ok?'flex':'none';if(ok)any=true;});document.getElementById('msg-empty').style.display=any?'none':'flex';document.getElementById('msg-list').style.display=any?'block':'none';}
+function markAllRead(){document.querySelectorAll('#msg-list .cell').forEach(function(c){c.removeAttribute('data-unread');});var b=document.querySelector('.tabbar .tab-badge');if(b)b.style.display='none';toast('已全部标记为已读');}
+/* ===== 声光寻宠 ===== */
+var ringing=false;
+function toggleFind(){var btn=document.getElementById('find-btn');if(!ringing){confirmDialog('启动声光寻宠？','项圈将持续响铃并闪光，有助于定位附近的宠物，会持续耗电。','启动',function(){ringing=true;btn.classList.add('ringing');document.getElementById('find-label').textContent='停止响铃';document.getElementById('find-status').textContent='项圈正在响铃闪光中…';addRipples(btn);});}else{ringing=false;btn.classList.remove('ringing');document.getElementById('find-label').textContent='启动响铃';document.getElementById('find-status').textContent='点击让项圈持续响铃并闪光';rmRipples();toast('已停止响铃');}}
+function addRipples(btn){for(var i=0;i<2;i++){var r=document.createElement('span');r.className='ripple';r.style.animationDelay=(i*0.8)+'s';btn.parentNode.insertBefore(r,btn);}}
+function rmRipples(){document.querySelectorAll('.ripple').forEach(function(r){r.remove();});}
+/* ===== 轨迹播放 ===== */
+var playing=false,pt,speeds=['1x','2x','4x','0.5x'],si=0,prog=35;
+var pts=[[18,30],[28,38],[38,35],[51,50],[62,60],[77,63],[85,77]];
+function lerpHead(p){var seg=p/100*(pts.length-1),i=Math.floor(seg),f=seg-i;if(i>=pts.length-1){i=pts.length-2;f=1;}var x=pts[i][0]+(pts[i+1][0]-pts[i][0])*f,y=pts[i][1]+(pts[i+1][1]-pts[i][1])*f;var h=document.getElementById('playhead');h.style.left=x+'%';h.style.top=y+'%';}
+function setProg(p){prog=Math.max(0,Math.min(100,p));document.getElementById('pb-fill').style.width=prog+'%';document.getElementById('pb-knob').style.left=prog+'%';var mins=420+Math.round(prog/100*161);document.getElementById('pb-cur').textContent=('0'+Math.floor(mins/60)).slice(-2)+':'+('0'+(mins%60)).slice(-2);lerpHead(prog);}
+function togglePlay(){var ic=document.querySelector('#pb-btn use');if(!playing){playing=true;ic.setAttribute('href','#i-pause');var step=speeds[si]==='0.5x'?0.4:(parseFloat(speeds[si])*0.8);pt=setInterval(function(){setProg(prog+step);if(prog>=100){togglePlay();}},60);}else{playing=false;ic.setAttribute('href','#i-play');clearInterval(pt);}}
+function cycleSpeed(){si=(si+1)%speeds.length;document.getElementById('pb-speed').textContent=speeds[si];if(playing){togglePlay();togglePlay();}}
+function seek(e){var s=document.getElementById('pb-slider'),r=s.getBoundingClientRect();setProg((e.clientX-r.left)/r.width*100);}
+/* ===== 电子围栏半径 ===== */
+function setFence(e){var s=document.getElementById('fence-slider'),r=s.getBoundingClientRect();var p=Math.max(0,Math.min(100,(e.clientX-r.left)/r.width*100));document.getElementById('fence-fill').style.width=p+'%';document.getElementById('fence-knob').style.left=p+'%';document.getElementById('fence-val').textContent=Math.round(50+p/100*450);}
+/* ===== Switch 点击 ===== */
+document.querySelectorAll('.switch').forEach(function(s){if(!s.getAttribute('onclick'))s.addEventListener('click',function(){this.classList.toggle('on');});});
+setProg(35);toggleTabbar('home');
+</script>
+
+</body>
+</html>
