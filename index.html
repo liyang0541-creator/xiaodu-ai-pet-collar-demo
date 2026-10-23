@@ -254,6 +254,34 @@ body{font-family:var(--font-sans);background:#e9edf3;color:var(--color-text-prim
 .empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--color-text-tertiary);padding:40px;}
 .empty svg{width:72px;height:72px;opacity:.5;}
 .empty .e-text{font-size:14px;}
+/* 首页新增：右上消息入口 / 在家时长 chip / 今日状态环 */
+.home-top-btn{position:absolute;top:50px;right:15px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.92);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow-surface);z-index:21;}
+.home-top-btn svg{width:22px;height:22px;color:var(--color-text-primary);}
+.home-top-btn .nd{position:absolute;top:-3px;right:-3px;min-width:16px;height:16px;background:var(--color-function-error);
+  color:#fff;border-radius:var(--radius-pill);font-size:11px;line-height:16px;text-align:center;padding:0 4px;}
+.home-chip{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;display:flex;align-items:center;gap:6px;
+  height:34px;padding:0 15px;background:#fff;border-radius:var(--radius-pill);box-shadow:var(--shadow-floating);
+  font-size:13px;font-weight:var(--fw-medium);color:var(--color-text-primary);cursor:pointer;z-index:6;}
+.home-chip svg{width:16px;height:16px;color:var(--color-function-success);}
+.goal-ring{position:relative;width:84px;height:84px;flex-shrink:0;}
+.goal-ring svg{width:84px;height:84px;}
+.goal-ring .gr-txt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;}
+/* 地图放大页 */
+.mapzoom-bg{background:
+  linear-gradient(0deg,rgba(50,199,109,0.05),rgba(50,199,109,0.05)),
+  repeating-linear-gradient(0deg,#e1ebe4 0 1px,transparent 1px 44px),
+  repeating-linear-gradient(90deg,#e1ebe4 0 1px,transparent 1px 44px),
+  linear-gradient(135deg,#eef5ef,#e6efe9);}
+.batt-pill{position:absolute;top:52px;left:15px;display:flex;align-items:center;gap:6px;height:30px;padding:0 12px;
+  background:rgba(255,255,255,0.95);border-radius:var(--radius-pill);font-size:12px;font-weight:var(--fw-medium);
+  color:var(--color-text-primary);box-shadow:var(--shadow-surface);z-index:21;}
+.batt-pill svg{width:16px;height:16px;color:var(--color-function-success);}
+.geo-area{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%) rotate(-11deg);width:170px;height:150px;
+  background:rgba(50,199,109,0.16);border:2px solid var(--color-function-success);border-radius:var(--radius-xl);z-index:3;}
+.zoom-card{position:absolute;left:50%;bottom:56px;transform:translateX(-50%);background:#fff;padding:12px 22px;
+  border-radius:var(--radius-pill);box-shadow:var(--shadow-floating);font-size:15px;font-weight:var(--fw-semibold);
+  color:var(--color-text-primary);white-space:nowrap;z-index:6;}
 </style>
 </head>
 <body>
@@ -302,16 +330,17 @@ body{font-family:var(--font-sans);background:#e9edf3;color:var(--color-text-prim
 <!-- ========== 首页 / 地图总览 ========== -->
 <section class="screen active" id="screen-home" data-root="1">
   <div class="scroll" style="padding-bottom:68px">
-    <div class="map" style="height:360px">
+    <div class="map" style="height:300px" onclick="go('mapzoom')">
       <div class="statusbar on-map"><span>9:41</span><span class="sb-right"><svg><use href="#i-wifi"/></svg><svg><use href="#i-battery"/></svg></span></div>
+      <div class="home-top-btn" onclick="event.stopPropagation();go('messages')"><svg><use href="#i-bell"/></svg><span class="nd" id="home-msg-badge">2</span></div>
       <div class="road h" style="top:120px"></div><div class="road v" style="left:90px"></div>
-      <div class="road d" style="top:220px"></div><div class="park" style="width:120px;height:90px;left:210px;top:60px"></div>
-      <div class="accuracy" style="left:52%;top:55%;width:120px;height:120px"></div>
-      <div class="pin" style="left:52%;top:55%"><div class="pin-body"><img src="https://images.unsplash.com/photo-1558788353-f76d92427f16?w=120&q=70" onerror="this.src='https://picsum.photos/seed/dog/120'"></div></div>
-      <div class="map-fab" style="bottom:96px" onclick="toast('已切换卫星图层')"><svg><use href="#i-layers"/></svg></div>
-      <div class="map-fab" style="bottom:44px" onclick="refreshLoc(this)"><svg><use href="#i-target"/></svg></div>
+      <div class="road d" style="top:200px"></div><div class="park" style="width:120px;height:90px;left:210px;top:40px"></div>
+      <div class="accuracy" style="left:52%;top:52%;width:120px;height:120px"></div>
+      <div class="pin" style="left:52%;top:52%"><div class="pin-body"><img src="https://images.unsplash.com/photo-1558788353-f76d92427f16?w=120&q=70" onerror="this.src='https://picsum.photos/seed/dog/120'"></div></div>
+      <div class="home-chip" onclick="event.stopPropagation();go('mapzoom')"><svg><use href="#i-home"/></svg>在家 2 小时 · 点击放大</div>
+      <div class="map-fab" style="bottom:66px" onclick="event.stopPropagation();toast('已切换卫星图层')"><svg><use href="#i-layers"/></svg></div>
+      <div class="map-fab" style="bottom:14px" onclick="event.stopPropagation();refreshLoc(this)"><svg><use href="#i-target"/></svg></div>
     </div>
-    <div class="banner" id="lowbatt"><svg><use href="#i-warn"/></svg><span>项圈电量 18%，建议今晚充电</span><span class="b-act" onclick="document.getElementById('lowbatt').style.display='none'">知道了</span></div>
     <div class="sheet" style="position:relative;margin-top:-24px;box-shadow:none;border-radius:var(--radius-5xl) var(--radius-5xl) 0 0">
       <div class="grabber"></div>
       <div class="pet-head">
@@ -322,23 +351,47 @@ body{font-family:var(--font-sans);background:#e9edf3;color:var(--color-text-prim
         </div>
         <div class="icon-btn" onclick="go('share')"><svg style="width:22px;height:22px;color:var(--color-text-secondary)"><use href="#i-share"/></svg></div>
       </div>
-      <div class="device-stats">
-        <div class="ds"><div class="v">18<span class="t13">%</span></div><div class="k">剩余电量</div></div>
-        <div class="ds"><div class="v">6<span class="t13">天</span></div><div class="k">预计续航</div></div>
-        <div class="ds"><div class="v">IPX6</div><div class="k">防水等级</div></div>
+      <div class="ai-card" onclick="go('health-detail')" style="cursor:pointer">
+        <div class="ai-glow"></div>
+        <div class="ai-tag"><svg style="width:14px;height:14px"><use href="#i-ai"/></svg>AI 今日总结</div>
+        <div class="ai-headline" style="font-size:18px">今天状态不错，午后活动偏少</div>
+        <div class="ai-desc">已走 9,350 步、睡眠 13 小时，心率体温平稳；建议傍晚多陪它走走。</div>
+      </div>
+      <div class="card" onclick="switchTab('health')" style="cursor:pointer">
+        <div class="row between mb10"><div class="sec-title" style="margin:0">今日状态</div><span class="t13 tertiary">周一 10月9日 ›</span></div>
+        <div class="row between">
+          <div>
+            <div class="row" style="align-items:baseline;gap:8px"><span class="num" style="font-size:34px;color:var(--color-function-success)">9,350</span><span class="t18" style="color:var(--color-function-success);font-weight:600">步</span></div>
+            <div class="t13 tertiary mt4">目标 15,000 步 · 已完成 63%</div>
+            <div class="row mt10" style="gap:8px"><span class="tag success"><i class="dot" style="background:var(--color-function-success)"></i>活力充沛</span><span class="tag gray">连续达标 4 天</span></div>
+          </div>
+          <div class="goal-ring">
+            <svg viewBox="0 0 84 84"><circle cx="42" cy="42" r="36" fill="none" stroke="var(--color-bg-muted)" stroke-width="9"/><circle cx="42" cy="42" r="36" fill="none" stroke="var(--color-function-success)" stroke-width="9" stroke-linecap="round" stroke-dasharray="226" stroke-dashoffset="84" transform="rotate(-90 42 42)"/></svg>
+            <div class="gr-txt"><span class="num t18" style="color:var(--color-function-success)">63%</span><span class="t12 tertiary">目标</span></div>
+          </div>
+        </div>
       </div>
       <div class="addr"><svg><use href="#i-pin"/></svg><span>海淀区西二旗北路·领秀新硅谷小区南门附近（10分钟前更新）</span></div>
-      <div class="grid">
+      <div class="grid" style="grid-template-columns:repeat(3,1fr)">
         <div class="g-item" onclick="go('track')"><div class="g-ico"><svg><use href="#i-target"/></svg></div><span>实时追踪</span></div>
         <div class="g-item" onclick="go('trail')"><div class="g-ico"><svg><use href="#i-route"/></svg></div><span>轨迹回放</span></div>
         <div class="g-item" onclick="go('fence')"><div class="g-ico green"><svg><use href="#i-fence"/></svg></div><span>电子围栏</span></div>
-        <div class="g-item" onclick="go('find')"><div class="g-ico orange"><svg><use href="#i-sound"/></svg></div><span>声光寻宠</span></div>
-        <div class="g-item" onclick="go('lost')"><div class="g-ico red"><svg><use href="#i-warn"/></svg></div><span>走失模式</span></div>
-        <div class="g-item" onclick="go('share')"><div class="g-ico"><svg><use href="#i-share"/></svg></div><span>多人共享</span></div>
-        <div class="g-item" onclick="go('health-detail')"><div class="g-ico purple"><svg><use href="#i-ai"/></svg></div><span>AI 日报</span></div>
-        <div class="g-item" onclick="go('camera')"><div class="g-ico"><svg><use href="#i-cam"/></svg></div><span>摄像机联动</span></div>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ========== 地图放大页 ========== -->
+<section class="screen sub" id="screen-mapzoom">
+  <div class="map mapzoom-bg" style="flex:1" >
+    <div class="statusbar on-map"><span>9:41</span><span class="sb-right"><svg><use href="#i-wifi"/></svg><svg><use href="#i-battery"/></svg></span></div>
+    <div class="navbar plain"><span class="nb-title">实时位置</span><div class="nb-left"><div class="icon-btn" onclick="back()"><svg><use href="#i-back"/></svg></div></div></div>
+    <div class="batt-pill"><svg><use href="#i-battery"/></svg>93% · 在线 · 刚刚</div>
+    <div class="road h" style="top:360px;opacity:.5"></div><div class="road d" style="top:520px;opacity:.5"></div>
+    <div class="geo-area"></div>
+    <div class="pin" style="left:50%;top:46%"><div class="pin-body" style="width:54px;height:54px"><img src="https://images.unsplash.com/photo-1558788353-f76d92427f16?w=140&q=70" onerror="this.src='https://picsum.photos/seed/dog/140'"></div></div>
+    <div class="zoom-card"><svg style="width:16px;height:16px;color:var(--color-function-success);vertical-align:-2px"><use href="#i-home"/></svg> 在家 · 已停留 2 小时</div>
+    <div class="map-fab" style="right:15px;bottom:40px" onclick="refreshLoc(this)"><svg><use href="#i-target"/></svg></div>
   </div>
 </section>
 
@@ -376,9 +429,9 @@ body{font-family:var(--font-sans);background:#e9edf3;color:var(--color-text-prim
 </section>
 
 <!-- ========== 消息 / 报警信息 ========== -->
-<section class="screen" id="screen-messages" data-root="1">
+<section class="screen sub" id="screen-messages">
   <div class="statusbar"><span>9:41</span><span class="sb-right"><svg><use href="#i-wifi"/></svg><svg><use href="#i-battery"/></svg></span></div>
-  <div class="navbar"><span class="nb-title">消息</span><div class="nb-right"><div class="icon-btn" onclick="markAllRead()"><span class="t14" style="color:var(--color-brand-primary)">全部已读</span></div></div></div>
+  <div class="navbar"><span class="nb-title">消息</span><div class="nb-left"><div class="icon-btn" onclick="back()"><svg><use href="#i-back"/></svg></div></div><div class="nb-right"><div class="icon-btn" onclick="markAllRead()"><span class="t14" style="color:var(--color-brand-primary)">全部已读</span></div></div></div>
   <div class="subtabs" id="msg-tabs">
     <div class="st on" onclick="msgFilter(this,'all')">全部</div>
     <div class="st" onclick="msgFilter(this,'fence')">越界</div>
@@ -588,7 +641,6 @@ body{font-family:var(--font-sans);background:#e9edf3;color:var(--color-text-prim
 <nav class="tabbar" id="tabbar">
   <div class="tab on" data-tab="home" onclick="switchTab('home')"><svg><use href="#i-home"/></svg><span>首页</span></div>
   <div class="tab" data-tab="health" onclick="switchTab('health')"><svg><use href="#i-health"/></svg><span>健康</span></div>
-  <div class="tab" data-tab="messages" onclick="switchTab('messages')"><svg><use href="#i-bell"/></svg><span>消息</span><span class="tab-badge">2</span></div>
   <div class="tab" data-tab="me" onclick="switchTab('me')"><svg><use href="#i-user"/></svg><span>我的</span></div>
 </nav>
 
@@ -625,7 +677,7 @@ document.getElementById('mask').addEventListener('click',function(e){if(e.target
 function refreshLoc(btn){var s=btn.querySelector('svg');s.style.transition='transform .6s';s.style.transform='rotate(360deg)';setTimeout(function(){s.style.transition='';s.style.transform='';},600);toast('定位已更新 · GPS 精度 8m');}
 /* ===== 消息筛选 ===== */
 function msgFilter(el,cat){document.querySelectorAll('#msg-tabs .st').forEach(function(x){x.classList.remove('on');});el.classList.add('on');var any=false;document.querySelectorAll('#msg-list .cell').forEach(function(c){var ok=(cat==='all'||c.dataset.cat===cat);c.style.display=ok?'flex':'none';if(ok)any=true;});document.getElementById('msg-empty').style.display=any?'none':'flex';document.getElementById('msg-list').style.display=any?'block':'none';}
-function markAllRead(){document.querySelectorAll('#msg-list .cell').forEach(function(c){c.removeAttribute('data-unread');});var b=document.querySelector('.tabbar .tab-badge');if(b)b.style.display='none';toast('已全部标记为已读');}
+function markAllRead(){document.querySelectorAll('#msg-list .cell').forEach(function(c){c.removeAttribute('data-unread');});var b=document.getElementById('home-msg-badge');if(b)b.style.display='none';toast('已全部标记为已读');}
 /* ===== 声光寻宠 ===== */
 var ringing=false;
 function toggleFind(){var btn=document.getElementById('find-btn');if(!ringing){confirmDialog('启动声光寻宠？','项圈将持续响铃并闪光，有助于定位附近的宠物，会持续耗电。','启动',function(){ringing=true;btn.classList.add('ringing');document.getElementById('find-label').textContent='停止响铃';document.getElementById('find-status').textContent='项圈正在响铃闪光中…';addRipples(btn);});}else{ringing=false;btn.classList.remove('ringing');document.getElementById('find-label').textContent='启动响铃';document.getElementById('find-status').textContent='点击让项圈持续响铃并闪光';rmRipples();toast('已停止响铃');}}
