@@ -312,6 +312,23 @@ body{font-family:var(--font-sans);background:#e9edf3;color:var(--color-text-prim
 .minibars .mb i{width:100%;max-width:20px;border-radius:6px 6px 0 0;background:var(--color-brand-blue-300);display:block;}
 .minibars .mb.hl i{background:var(--color-function-success);}
 .minibars .mb span{font-size:11px;color:var(--color-text-tertiary);}
+/* 目标设定 */
+.goal-arrow{width:14px;height:14px;color:var(--color-text-tertiary);vertical-align:-2px;margin-left:3px;}
+.goal-row{border-radius:var(--radius-lg);transition:background .15s;}
+.goal-row:active{background:var(--color-bg-subtle);}
+.goal-row .pr-top b{color:var(--color-text-primary);font-weight:var(--fw-semibold);}
+.stepper{display:flex;align-items:center;justify-content:center;gap:28px;margin:10px 0 16px;}
+.stepper .sp-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--color-border-default);background:#fff;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.stepper .sp-btn:active{background:var(--color-bg-subtle);}
+.stepper .sp-btn svg{width:22px;height:22px;color:var(--color-brand-primary);}
+.stepper .sp-val{min-width:130px;text-align:center;}
+.stepper .sp-val b{font-size:32px;font-weight:var(--fw-black);color:var(--color-text-primary);}
+.stepper .sp-val span{font-size:13px;color:var(--color-text-tertiary);display:block;margin-top:2px;}
+.chips{display:flex;flex-wrap:wrap;gap:8px;}
+.chips .chip{height:32px;padding:0 16px;border-radius:var(--radius-pill);background:var(--color-bg-muted);
+  color:var(--color-text-secondary);font-size:13px;display:flex;align-items:center;cursor:pointer;}
+.chips .chip:active{opacity:.6;}
 </style>
 </head>
 <body>
@@ -338,6 +355,7 @@ body{font-family:var(--font-sans);background:#e9edf3;color:var(--color-text-prim
 <g id="i-warn"><path d="M12 3 22 20H2Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 9v5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1.1" fill="currentColor"/></g>
 <g id="i-check"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 12.5l2.5 2.5 5-5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
 <g id="i-plus"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></g>
+<g id="i-minus"><path d="M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></g>
 <g id="i-refresh"><path d="M19 11a7 7 0 1 0-1.2 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M19 5v6h-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
 <g id="i-layers"><path d="M12 3 3 8l9 5 9-5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M3 13l9 5 9-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></g>
 <g id="i-play"><path d="M8 5v14l11-7Z" fill="currentColor"/></g>
@@ -441,12 +459,18 @@ body{font-family:var(--font-sans);background:#e9edf3;color:var(--color-text-prim
     <div class="card">
       <div class="row between"><div class="sec-title" style="margin:0">今日体征</div><span class="t13 tertiary">14:30 更新</span></div>
       <div class="vitals mt10">
-        <div class="vital"><div class="vv" style="margin-top:8px">3.2<span class="t12">km</span></div><div class="vk" style="margin-top:14px">活动量</div></div>
+        <div class="vital"><div class="vv" style="margin-top:8px">9,350<span class="t12">步</span></div><div class="vk" style="margin-top:14px">活动量</div></div>
         <div class="vital"><div class="vv" style="margin-top:8px;color:var(--color-function-success)">88<span class="t12">bpm</span></div><div class="vk" style="margin-top:14px">心率 · 正常</div></div>
         <div class="vital"><div class="vv" style="margin-top:8px">38.4<span class="t12">℃</span></div><div class="vk" style="margin-top:14px">体温 · 正常</div></div>
       </div>
-      <div class="progress-row"><div class="pr-top"><span>活动目标 3.2 / 4.0 km</span><span class="muted">80%</span></div><div class="bar"><i style="width:80%"></i></div></div>
-      <div class="progress-row"><div class="pr-top"><span>睡眠 13.0 / 12 h</span><span class="muted">充足</span></div><div class="bar green"><i style="width:100%"></i></div></div>
+      <div class="progress-row goal-row" onclick="go('goal-setting')" style="cursor:pointer">
+        <div class="pr-top"><span>活动目标 <b id="act-cur">9,350</b> / <b id="act-goal">15,000</b> 步<svg class="goal-arrow"><use href="#i-chev-r"/></svg></span><span class="muted" id="act-pct">63%</span></div>
+        <div class="bar"><i id="act-bar" style="width:63%"></i></div>
+      </div>
+      <div class="progress-row goal-row" onclick="go('goal-setting')" style="cursor:pointer">
+        <div class="pr-top"><span>睡眠目标 13.0 / <b id="sleep-goal">12</b> h<svg class="goal-arrow"><use href="#i-chev-r"/></svg></span><span class="muted" style="color:var(--color-function-success)">充足</span></div>
+        <div class="bar green"><i id="sleep-bar" style="width:100%"></i></div>
+      </div>
     </div>
     <div class="card">
       <div class="sec-title">今日事件</div>
@@ -610,6 +634,41 @@ body{font-family:var(--font-sans);background:#e9edf3;color:var(--color-text-prim
       <div class="kv"><span class="k">不建议</span><span class="v">长时间潜水 / 高温烘烤</span></div>
     </div>
     <div class="banner" style="background:var(--color-brand-red-100);color:var(--color-function-error)"><svg><use href="#i-warn"/></svg><span>幼犬或皮肤敏感的宠物，初次佩戴请循序渐进，出现红肿请立即取下。</span></div>
+  </div>
+</section>
+
+<!-- ========== 健康目标设定 ========== -->
+<section class="screen sub" id="screen-goal-setting">
+  <div class="statusbar"><span>9:41</span><span class="sb-right"><svg><use href="#i-wifi"/></svg><svg><use href="#i-battery"/></svg></span></div>
+  <div class="navbar"><span class="nb-title">健康目标设定</span><div class="nb-left"><div class="icon-btn" onclick="back()"><svg><use href="#i-back"/></svg></div></div><div class="nb-right"><div class="icon-btn" onclick="saveGoals()"><span class="t14" style="color:var(--color-brand-primary)">保存</span></div></div></div>
+  <div class="scroll pad">
+    <div class="card">
+      <div class="row between"><div class="sec-title" style="margin:0">活动目标</div><span class="tag">按步数</span></div>
+      <div class="stepper">
+        <div class="sp-btn" onclick="actGoalStep(-500)"><svg><use href="#i-minus"/></svg></div>
+        <div class="sp-val"><b id="gs-act">15,000</b><span>步 / 天</span></div>
+        <div class="sp-btn" onclick="actGoalStep(500)"><svg><use href="#i-plus"/></svg></div>
+      </div>
+      <div class="chips">
+        <div class="chip" onclick="setActGoal(8000)">8,000</div><div class="chip" onclick="setActGoal(10000)">10,000</div>
+        <div class="chip" onclick="setActGoal(15000)">15,000</div><div class="chip" onclick="setActGoal(20000)">20,000</div>
+      </div>
+      <div class="t13 tertiary mt10">参考：中小型犬每日建议 8,000–20,000 步，可按年龄与活力调整。</div>
+    </div>
+    <div class="card">
+      <div class="row between"><div class="sec-title" style="margin:0">睡眠目标</div><span class="tag">按小时</span></div>
+      <div class="stepper">
+        <div class="sp-btn" onclick="sleepGoalStep(-0.5)"><svg><use href="#i-minus"/></svg></div>
+        <div class="sp-val"><b id="gs-sleep">12</b><span>小时 / 天</span></div>
+        <div class="sp-btn" onclick="sleepGoalStep(0.5)"><svg><use href="#i-plus"/></svg></div>
+      </div>
+      <div class="chips">
+        <div class="chip" onclick="setSleepGoal(10)">10 h</div><div class="chip" onclick="setSleepGoal(12)">12 h</div>
+        <div class="chip" onclick="setSleepGoal(14)">14 h</div><div class="chip" onclick="setSleepGoal(16)">16 h</div>
+      </div>
+      <div class="t13 tertiary mt10">参考：成年犬每日睡眠约 12–14 小时，幼犬与老年犬更多。</div>
+    </div>
+    <button class="btn btn-primary btn-lg btn-block" onclick="saveGoals()">保存目标</button>
   </div>
 </section>
 
@@ -838,7 +897,7 @@ function screenEl(n){return document.getElementById('screen-'+n);}
 function show(n){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});var el=screenEl(n);el.classList.add('active');var sc=el.querySelector('.scroll');if(sc)sc.scrollTop=0;}
 function isRoot(n){var el=screenEl(n);return el&&el.dataset.root==='1';}
 function toggleTabbar(n){document.getElementById('tabbar').style.display=isRoot(n)?'flex':'none';}
-function go(n){stack.push(curScreen());show(n);toggleTabbar(n);}
+function go(n){stack.push(curScreen());show(n);toggleTabbar(n);if(n==='goal-setting')renderGoalPage();}
 function curScreen(){var a=document.querySelector('.screen.active');return a?a.id.replace('screen-',''):'home';}
 function back(){var p=stack.pop()||'home';show(p);toggleTabbar(p);}
 function switchTab(t){curTab=t;stack=[];show(t);toggleTabbar(t);
@@ -856,6 +915,23 @@ function refreshLoc(btn){var s=btn.querySelector('svg');s.style.transition='tran
 function msgFilter(el,cat){document.querySelectorAll('#msg-tabs .st').forEach(function(x){x.classList.remove('on');});el.classList.add('on');var any=false;document.querySelectorAll('#msg-list .cell').forEach(function(c){var ok=(cat==='all'||c.dataset.cat===cat);c.style.display=ok?'flex':'none';if(ok)any=true;});document.getElementById('msg-empty').style.display=any?'none':'flex';document.getElementById('msg-list').style.display=any?'block':'none';}
 function markAllRead(){document.querySelectorAll('#msg-list .cell').forEach(function(c){c.removeAttribute('data-unread');});var b=document.getElementById('home-msg-badge');if(b)b.style.display='none';toast('已全部标记为已读');}
 function hdTab(el,which){el.parentNode.querySelectorAll('.st').forEach(function(s){s.classList.remove('on');});el.classList.add('on');['day','week','month'].forEach(function(k){document.getElementById('hd-'+k).style.display=(k===which?'block':'none');});var sc=el.closest('.screen').querySelector('.scroll');if(sc)sc.scrollTop=0;}
+/* ===== 健康目标设定 ===== */
+var actGoal=15000,sleepGoal=12,actCur=9350,sleepCur=13.0;
+function fmt(n){return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,',');}
+function sleepTxt(v){return (v%1?v.toFixed(1):v.toString());}
+function renderGoalPage(){document.getElementById('gs-act').textContent=fmt(actGoal);document.getElementById('gs-sleep').textContent=sleepTxt(sleepGoal);}
+function actGoalStep(d){actGoal=Math.max(3000,Math.min(30000,actGoal+d));renderGoalPage();}
+function setActGoal(v){actGoal=v;renderGoalPage();}
+function sleepGoalStep(d){sleepGoal=Math.max(8,Math.min(18,Math.round((sleepGoal+d)*2)/2));renderGoalPage();}
+function setSleepGoal(v){sleepGoal=v;renderGoalPage();}
+function saveGoals(){
+  document.getElementById('act-goal').textContent=fmt(actGoal);
+  var ap=Math.min(100,Math.round(actCur/actGoal*100));
+  document.getElementById('act-pct').textContent=ap+'%';document.getElementById('act-bar').style.width=ap+'%';
+  document.getElementById('sleep-goal').textContent=sleepTxt(sleepGoal);
+  var sp=Math.min(100,Math.round(sleepCur/sleepGoal*100));document.getElementById('sleep-bar').style.width=sp+'%';
+  toast('目标已保存');setTimeout(back,700);
+}
 /* ===== 声光寻宠 ===== */
 var ringing=false;
 function toggleFind(){var btn=document.getElementById('find-btn');if(!ringing){confirmDialog('启动声光寻宠？','项圈将持续响铃并闪光，有助于定位附近的宠物，会持续耗电。','启动',function(){ringing=true;btn.classList.add('ringing');document.getElementById('find-label').textContent='停止响铃';document.getElementById('find-status').textContent='项圈正在响铃闪光中…';addRipples(btn);});}else{ringing=false;btn.classList.remove('ringing');document.getElementById('find-label').textContent='启动响铃';document.getElementById('find-status').textContent='点击让项圈持续响铃并闪光';rmRipples();toast('已停止响铃');}}
