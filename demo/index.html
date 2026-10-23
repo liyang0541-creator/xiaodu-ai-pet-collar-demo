@@ -299,6 +299,19 @@ body{font-family:var(--font-sans);background:#e9edf3;color:var(--color-text-prim
   font-weight:var(--fw-bold);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .guide-step .gs-t{font-size:15px;font-weight:var(--fw-medium);}
 .guide-step .gs-d{font-size:13px;color:var(--color-text-secondary);margin-top:3px;line-height:1.6;}
+/* VIP 标签 / 周月报图表 */
+.vip-badge{display:inline-flex;align-items:center;gap:3px;height:18px;padding:0 7px;border-radius:var(--radius-pill);
+  font-size:10px;font-weight:var(--fw-bold);color:#7A4A00;background:linear-gradient(90deg,#FFE08A,#F4BE48);vertical-align:1px;}
+.vip-badge svg{width:11px;height:11px;}
+.vip-banner{display:flex;align-items:center;gap:8px;padding:11px 14px;border-radius:var(--radius-2xl);margin-bottom:12px;
+  font-size:13px;background:linear-gradient(90deg,#FFF6E0,#FCEDCE);color:#7A4A00;}
+.vip-banner svg{width:18px;height:18px;flex-shrink:0;}
+.vip-banner .vb-act{margin-left:auto;font-weight:var(--fw-semibold);white-space:nowrap;}
+.minibars{display:flex;align-items:flex-end;gap:10px;height:96px;margin-top:8px;}
+.minibars .mb{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end;}
+.minibars .mb i{width:100%;max-width:20px;border-radius:6px 6px 0 0;background:var(--color-brand-blue-300);display:block;}
+.minibars .mb.hl i{background:var(--color-function-success);}
+.minibars .mb span{font-size:11px;color:var(--color-text-tertiary);}
 </style>
 </head>
 <body>
@@ -727,18 +740,61 @@ body{font-family:var(--font-sans);background:#e9edf3;color:var(--color-text-prim
 <!-- ========== 健康日报详情 ========== -->
 <section class="screen sub" id="screen-health-detail">
   <div class="statusbar"><span>9:41</span><span class="sb-right"><svg><use href="#i-wifi"/></svg><svg><use href="#i-battery"/></svg></span></div>
-  <div class="navbar"><span class="nb-title">健康日报</span><div class="nb-left"><div class="icon-btn" onclick="back()"><svg><use href="#i-back"/></svg></div></div></div>
-  <div class="subtabs"><div class="st on">日</div><div class="st" onclick="toast('周报为会员功能')">周</div><div class="st" onclick="toast('月报为会员功能')">月</div></div>
+  <div class="navbar"><span class="nb-title">健康报告</span><div class="nb-left"><div class="icon-btn" onclick="back()"><svg><use href="#i-back"/></svg></div></div></div>
+  <div class="subtabs"><div class="st on" onclick="hdTab(this,'day')">日报</div><div class="st" onclick="hdTab(this,'week')">周报<span class="vip-badge"><svg><use href="#i-vip"/></svg>VIP</span></div><div class="st" onclick="hdTab(this,'month')">月报<span class="vip-badge"><svg><use href="#i-vip"/></svg>VIP</span></div></div>
   <div class="scroll pad">
-    <div class="ai-card" style="border-radius:var(--radius-2xl)"><div class="ai-glow"></div><div class="ai-tag"><svg style="width:14px;height:14px"><use href="#i-ai"/></svg>10月22日 · AI 解读</div><div class="ai-headline" style="font-size:18px">整体健康，注意午后活动不足</div><div class="ai-desc">活动量达标 80%，睡眠充足，心率体温平稳；午后久卧 2 小时略低于同龄柯基均值，可适度增加互动。</div></div>
-    <div class="card"><div class="sec-title">活动量</div><div class="progress-row"><div class="pr-top"><span>步行 3.2km / 目标 4.0km</span><span class="muted">80%</span></div><div class="bar"><i style="width:80%"></i></div></div><div class="progress-row"><div class="pr-top"><span>活跃时长 2.6h</span><span class="muted">正常</span></div><div class="bar green"><i style="width:65%"></i></div></div></div>
-    <div class="card"><div class="sec-title">睡眠</div><div class="progress-row"><div class="pr-top"><span>总睡眠 13.0h</span><span class="muted" style="color:var(--color-function-success)">充足</span></div><div class="bar green"><i style="width:100%"></i></div></div><div class="t13 tertiary mt10">深睡 7.2h · 浅睡 5.8h · 夜间无异常起身</div></div>
-    <div class="card"><div class="sec-title">生命体征</div>
-      <div class="cell" style="padding:12px 0;background:transparent"><div class="c-icon" style="color:var(--color-function-success)"><svg><use href="#i-heart"/></svg></div><div class="c-main"><div class="c-title">心率</div><div class="c-label">区间 72–104 bpm</div></div><span class="tag success">正常</span></div>
-      <div class="cell" style="padding:12px 0;background:transparent"><div class="c-icon"><svg><use href="#i-activity"/></svg></div><div class="c-main"><div class="c-title">呼吸</div><div class="c-label">22 次/分</div></div><span class="tag success">正常</span></div>
-      <div class="cell" style="padding:12px 0;background:transparent"><div class="c-icon" style="color:var(--color-function-warning)"><svg><use href="#i-power"/></svg></div><div class="c-main"><div class="c-title">体温</div><div class="c-label">38.4℃</div></div><span class="tag success">正常</span></div>
+    <div id="hd-day">
+      <div class="ai-card" style="border-radius:var(--radius-2xl)"><div class="ai-glow"></div><div class="ai-tag"><svg style="width:14px;height:14px"><use href="#i-ai"/></svg>10月22日 · AI 解读</div><div class="ai-headline" style="font-size:18px">整体健康，注意午后活动不足</div><div class="ai-desc">活动量达标 80%，睡眠充足，心率体温平稳；午后久卧 2 小时略低于同龄柯基均值，可适度增加互动。</div></div>
+      <div class="card"><div class="sec-title">活动量</div><div class="progress-row"><div class="pr-top"><span>步行 3.2km / 目标 4.0km</span><span class="muted">80%</span></div><div class="bar"><i style="width:80%"></i></div></div><div class="progress-row"><div class="pr-top"><span>活跃时长 2.6h</span><span class="muted">正常</span></div><div class="bar green"><i style="width:65%"></i></div></div></div>
+      <div class="card"><div class="sec-title">睡眠</div><div class="progress-row"><div class="pr-top"><span>总睡眠 13.0h</span><span class="muted" style="color:var(--color-function-success)">充足</span></div><div class="bar green"><i style="width:100%"></i></div></div><div class="t13 tertiary mt10">深睡 7.2h · 浅睡 5.8h · 夜间无异常起身</div></div>
+      <div class="card"><div class="sec-title">生命体征</div>
+        <div class="cell" style="padding:12px 0;background:transparent"><div class="c-icon" style="color:var(--color-function-success)"><svg><use href="#i-heart"/></svg></div><div class="c-main"><div class="c-title">心率</div><div class="c-label">区间 72–104 bpm</div></div><span class="tag success">正常</span></div>
+        <div class="cell" style="padding:12px 0;background:transparent"><div class="c-icon"><svg><use href="#i-activity"/></svg></div><div class="c-main"><div class="c-title">呼吸</div><div class="c-label">22 次/分</div></div><span class="tag success">正常</span></div>
+        <div class="cell" style="padding:12px 0;background:transparent"><div class="c-icon" style="color:var(--color-function-warning)"><svg><use href="#i-power"/></svg></div><div class="c-main"><div class="c-title">体温</div><div class="c-label">38.4℃</div></div><span class="tag success">正常</span></div>
+      </div>
+      <button class="btn btn-soft btn-lg btn-block" onclick="toast('就医建议为增值订阅功能')">获取 AI 就医建议</button>
     </div>
-    <button class="btn btn-soft btn-lg btn-block" onclick="toast('就医建议为增值订阅功能')">获取 AI 就医建议</button>
+    <div id="hd-week" style="display:none">
+      <div class="vip-banner"><svg><use href="#i-vip"/></svg><span>健康周报为 VIP 专属，已为你解锁本周报告</span><span class="vb-act">会员中心</span></div>
+      <div class="ai-card" style="border-radius:var(--radius-2xl)"><div class="ai-glow"></div><div class="ai-tag"><svg style="width:14px;height:14px"><use href="#i-ai"/></svg>10月16–22日 · AI 周报解读<span class="vip-badge" style="margin-left:4px"><svg><use href="#i-vip"/></svg>VIP</span></div><div class="ai-headline" style="font-size:18px">本周整体活跃，周中运动略少</div><div class="ai-desc">达标 5/7 天，周三、周四活动偏低；睡眠规律，体征平稳。建议工作日傍晚固定一次散步。</div></div>
+      <div class="card"><div class="row between mb10"><div class="sec-title" style="margin:0">本周概览</div><span class="tag success">达标 5/7 天</span></div>
+        <div class="vitals"><div class="vital"><div class="vv">8,640<span class="t12">步</span></div><div class="vk">日均步数</div></div><div class="vital"><div class="vv">22.4<span class="t12">km</span></div><div class="vk">总里程</div></div><div class="vital"><div class="vv">12.6<span class="t12">h</span></div><div class="vk">日均睡眠</div></div></div>
+      </div>
+      <div class="card"><div class="sec-title">每日活动量（步）</div>
+        <div class="minibars"><div class="mb hl"><i style="height:75%"></i><span>一</span></div><div class="mb hl"><i style="height:88%"></i><span>二</span></div><div class="mb"><i style="height:42%"></i><span>三</span></div><div class="mb"><i style="height:38%"></i><span>四</span></div><div class="mb hl"><i style="height:70%"></i><span>五</span></div><div class="mb hl"><i style="height:96%"></i><span>六</span></div><div class="mb hl"><i style="height:82%"></i><span>日</span></div></div>
+        <div class="t13 tertiary mt10">绿色为达标日 · 周三/周四未达每日目标</div>
+      </div>
+      <div class="card"><div class="sec-title">体征周均（对比上周）</div>
+        <div class="cell" style="padding:12px 0;background:transparent"><div class="c-icon" style="color:var(--color-function-success)"><svg><use href="#i-heart"/></svg></div><div class="c-main"><div class="c-title">平均心率</div><div class="c-label">86 bpm</div></div><span class="tag success">↓2 平稳</span></div>
+        <div class="cell" style="padding:12px 0;background:transparent"><div class="c-icon"><svg><use href="#i-activity"/></svg></div><div class="c-main"><div class="c-title">平均呼吸</div><div class="c-label">21 次/分</div></div><span class="tag success">持平</span></div>
+        <div class="cell" style="padding:12px 0;background:transparent"><div class="c-icon" style="color:var(--color-function-warning)"><svg><use href="#i-power"/></svg></div><div class="c-main"><div class="c-title">平均体温</div><div class="c-label">38.3℃</div></div><span class="tag success">正常</span></div>
+      </div>
+      <div class="card"><div class="sec-title">异常事件汇总</div>
+        <div class="ev"><div class="ev-ic" style="background:#FFF2E3;color:var(--color-function-warning)"><svg><use href="#i-moon"/></svg></div><div class="ev-main"><div class="ev-title">久卧提醒 2 次</div><div class="ev-sub">周三、周四午后 · 已联动摄像机确认无异常</div></div><span class="ev-time">轻度</span></div>
+      </div>
+      <button class="btn btn-soft btn-lg btn-block" onclick="toast('周报已导出为 PDF')">导出本周报告</button>
+    </div>
+    <div id="hd-month" style="display:none">
+      <div class="vip-banner"><svg><use href="#i-vip"/></svg><span>健康月报为 VIP 专属，已为你解锁本月报告</span><span class="vb-act">会员中心</span></div>
+      <div class="ai-card" style="border-radius:var(--radius-2xl)"><div class="ai-glow"></div><div class="ai-tag"><svg style="width:14px;height:14px"><use href="#i-ai"/></svg>10月 · AI 月报解读<span class="vip-badge" style="margin-left:4px"><svg><use href="#i-vip"/></svg>VIP</span></div><div class="ai-headline" style="font-size:18px">本月健康评分 92，状态优于同龄</div><div class="ai-desc">达标 22/31 天，体重稳定在 12.4kg，睡眠规律；第 3 周活动下降与降雨相关。整体趋势向好。</div></div>
+      <div class="card"><div class="row between mb10"><div class="sec-title" style="margin:0">本月概览</div><span class="tag success">健康评分 92</span></div>
+        <div class="vitals"><div class="vital"><div class="vv">22<span class="t12">/31</span></div><div class="vk">达标天数</div></div><div class="vital"><div class="vv">96.8<span class="t12">km</span></div><div class="vk">总里程</div></div><div class="vital"><div class="vv">12.4<span class="t12">kg</span></div><div class="vk">月末体重</div></div></div>
+      </div>
+      <div class="card"><div class="sec-title">每周活动趋势（km）</div>
+        <div class="minibars"><div class="mb hl"><i style="height:82%"></i><span>W1</span></div><div class="mb hl"><i style="height:90%"></i><span>W2</span></div><div class="mb"><i style="height:52%"></i><span>W3</span></div><div class="mb hl"><i style="height:78%"></i><span>W4</span></div></div>
+        <div class="t13 tertiary mt10">第 3 周因连续降雨活动减少，其余周均达标</div>
+      </div>
+      <div class="card"><div class="sec-title">月度体征对比（上月 → 本月）</div>
+        <div class="cell" style="padding:12px 0;background:transparent"><div class="c-icon" style="color:var(--color-function-success)"><svg><use href="#i-heart"/></svg></div><div class="c-main"><div class="c-title">平均心率</div><div class="c-label">89 → 86 bpm</div></div><span class="tag success">↓3 改善</span></div>
+        <div class="cell" style="padding:12px 0;background:transparent"><div class="c-icon" style="color:var(--color-function-success)"><svg><use href="#i-moon"/></svg></div><div class="c-main"><div class="c-title">日均睡眠</div><div class="c-label">12.1 → 12.5 h</div></div><span class="tag success">↑0.4 更规律</span></div>
+        <div class="cell" style="padding:12px 0;background:transparent"><div class="c-icon"><svg><use href="#i-power"/></svg></div><div class="c-main"><div class="c-title">体重</div><div class="c-label">12.5 → 12.4 kg</div></div><span class="tag success">平稳</span></div>
+      </div>
+      <div class="card"><div class="sec-title">本月里程碑</div>
+        <div class="ev"><div class="ev-ic" style="background:#E7F8EF;color:var(--color-function-success)"><svg><use href="#i-check"/></svg></div><div class="ev-main"><div class="ev-title">连续达标最长 8 天</div><div class="ev-sub">10月6日–10月13日</div></div></div>
+        <div class="ev"><div class="ev-ic" style="background:var(--color-brand-blue-100);color:var(--color-brand-primary)"><svg><use href="#i-activity"/></svg></div><div class="ev-main"><div class="ev-title">单日最高 15,820 步</div><div class="ev-sub">10月12日 · 郊野公园</div></div></div>
+      </div>
+      <button class="btn btn-soft btn-lg btn-block" onclick="toast('多宠对比为 VIP 功能')">查看多宠健康对比</button>
+    </div>
   </div>
 </section>
 
@@ -799,6 +855,7 @@ function refreshLoc(btn){var s=btn.querySelector('svg');s.style.transition='tran
 /* ===== 消息筛选 ===== */
 function msgFilter(el,cat){document.querySelectorAll('#msg-tabs .st').forEach(function(x){x.classList.remove('on');});el.classList.add('on');var any=false;document.querySelectorAll('#msg-list .cell').forEach(function(c){var ok=(cat==='all'||c.dataset.cat===cat);c.style.display=ok?'flex':'none';if(ok)any=true;});document.getElementById('msg-empty').style.display=any?'none':'flex';document.getElementById('msg-list').style.display=any?'block':'none';}
 function markAllRead(){document.querySelectorAll('#msg-list .cell').forEach(function(c){c.removeAttribute('data-unread');});var b=document.getElementById('home-msg-badge');if(b)b.style.display='none';toast('已全部标记为已读');}
+function hdTab(el,which){el.parentNode.querySelectorAll('.st').forEach(function(s){s.classList.remove('on');});el.classList.add('on');['day','week','month'].forEach(function(k){document.getElementById('hd-'+k).style.display=(k===which?'block':'none');});var sc=el.closest('.screen').querySelector('.scroll');if(sc)sc.scrollTop=0;}
 /* ===== 声光寻宠 ===== */
 var ringing=false;
 function toggleFind(){var btn=document.getElementById('find-btn');if(!ringing){confirmDialog('启动声光寻宠？','项圈将持续响铃并闪光，有助于定位附近的宠物，会持续耗电。','启动',function(){ringing=true;btn.classList.add('ringing');document.getElementById('find-label').textContent='停止响铃';document.getElementById('find-status').textContent='项圈正在响铃闪光中…';addRipples(btn);});}else{ringing=false;btn.classList.remove('ringing');document.getElementById('find-label').textContent='启动响铃';document.getElementById('find-status').textContent='点击让项圈持续响铃并闪光';rmRipples();toast('已停止响铃');}}
